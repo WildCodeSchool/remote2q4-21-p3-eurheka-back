@@ -1,6 +1,6 @@
 const connection = require("../db-config");
 const router = require("express").Router();
-
+const user= require('../models/users.model');
 router.get('/', (req, res) => {
     connection.query('SELECT * FROM users', (err, result) => {
       if (err) {
