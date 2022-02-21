@@ -11,7 +11,7 @@ const resourceRouter = require('./resources.routes');
 const themeRouter = require('./themes.routes');
 
 router.use('/users', usersRouter);
-router.use('/', authRouter);
+router.use('/session', authRouter);
 router.use('/cv', cvRouter);
 router.use('/enterprise', enterpriseRouter);
 router.use('/event', eventRouter);
