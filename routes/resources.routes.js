@@ -3,7 +3,9 @@ const resource = require('../models/resources.model');
 
 //CRUD Resource
 router.get('/', (req, res) => {
+    //Check user connection and level
 
+    //Get information from model
 });
 router.get('/:id', (req, res) => {
 
