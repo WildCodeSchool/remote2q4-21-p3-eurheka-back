@@ -104,8 +104,15 @@ router.post('/', async (req, res) => {
 router.put('/:id', (req, res) => {
     //this route must be protected, only for super admin
 });
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     //this route must be protected, only for super admin
+    const result= await Opinion.remove(req.params.id);
+    if(result){
+        return res.status(200).send('Opinion deleted');
+    }
+    else{
+        res.status(500).send('Error deleting an opinion');
+    }
 });
 
 

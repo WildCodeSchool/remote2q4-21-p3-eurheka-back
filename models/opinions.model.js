@@ -43,10 +43,30 @@ const create=({user, enterprise,opinion})=>{
     .catch((err)=>console.error(err));
 }
 
+const update=(id,isValid)=>{
+    return db
+    .query("UPDATE opinion SET is_valid=? WHERE id_opinion=?",[id,isValid])
+    .then(([result])=>{
+
+    })
+    .catch((err)=>console.error(err));
+}
+
+const remove=(id)=>{
+    return db
+    .query("DELETE FROM opinion WHERE id_opinion=?",[id])
+    .then(([result])=>{
+        return result.affectedRows !== 0;
+    })
+    .catch((err)=>console.error(err));
+}
+
 module.exports = {
     findAllByEnterprise,
     validate,
     findAll,
     findOne,
     create,
+    update,
+    remove
 }
