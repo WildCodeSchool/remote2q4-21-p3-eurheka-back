@@ -1,6 +1,13 @@
 //Definitions of users' roles
-const SUPER_ADMIN=1;
-const ADMIN=2;
-const COMPANY=3;
-const USER=4;
-const UN_CONNECTED=5;
+const userRole=
+{
+    SUPER_ADMIN:1,
+    ADMIN:2,
+    COMPANY:3,
+    USER:4,
+    UN_CONNECTED:5
+}
+
+module.exports={
+    userRole,
+}
