@@ -63,7 +63,7 @@ const create = ({ user, enterprise, opinion }) => {
 const update = (id, isValid) => {
     console.log(`ID : ${id} isvalid: ${isValid}`);
     return db
-        .query("UPDATE opinion SET is_valid=? WHERE id_opinion=?", [isValid,id])
+        .query("UPDATE opinion SET is_valid=? WHERE id_opinion=?", [isValid, id])
         .then(([result]) => {
             return result.affectedRows;
         })
