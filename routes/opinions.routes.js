@@ -29,6 +29,7 @@ router.get('/eurheka/', (req, res) => {
 });
 
 router.get('/enterprise/:id', (req, res) => {
+    //this route must be protected and visible only for superadmin, or entreprise concerned
     Entreprise.findOne(req.params.id)
         .then((id) => {
             if (id === undefined) {
@@ -47,6 +48,7 @@ router.get('/enterprise/:id', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
+    //this route must be protected, only for superadmin
     Opinion.findOne(req.params.id)
         .then((opinion) => {
             if (opinion) {
@@ -61,17 +63,23 @@ router.get('/:id', (req, res) => {
             res.status(500).send('Internal Error');
         })
 });
-router.post('/', (req, res) => {
+
+router.post('/', async (req, res) => {
+    //This route must be protected, =>for connected users
     //Get id_user via token, to do.
     const user_id = 1; //for tests
     //Check if enterprise is set
     let enterprise_id =0;
     const { entreprise, opinion } = req.body;
     if (entreprise === undefined) {
-        //pour debug
-        console.log('ID entreprise non communiqué');
-        //Get Eurheka ID from DB
-         enterprise_id = 2;
+        //Get Eurheka Id
+        const enterprise_value=await Entreprise.findOneByName('eurhéka');
+        enterprise_id=enterprise_value.id_enterprise;
+        if(enterprise_id===undefined)
+        {
+            console.log('erreur');
+            return res.status(404).send('Company not found');
+        }
     }
     else {
          enterprise_id = entreprise;
@@ -94,10 +102,10 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-
+    //this route must be protected, only for super admin
 });
 router.delete('/:id', (req, res) => {
-
+    //this route must be protected, only for super admin
 });
 
 
