@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const router = require('./routes/index.routes');
-
+const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 8000;
 
 connection.connect((err) => {
@@ -16,6 +16,7 @@ connection.connect((err) => {
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 
 app.use(cors())
 app.use('/api', router);

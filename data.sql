@@ -482,6 +482,9 @@ INSERT INTO `job_category` (`id_job_category`, `name`) VALUES
 (28, 'Social, Services à la personne'),
 (29, 'Sport et loisirs');
 
+DROP VIEW IF EXISTS `view_opinion`;
+CREATE ALGORITHM=UNDEFINED  VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)))  ;
+
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),
@@ -493,3 +496,7 @@ INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (7, 'Service civique'),
 (8, 'Alternance'),
 (9, 'Stage');
+
+INSERT INTO `enterprise` (`id_enterprise`, `name`, `adress`, `id_activity`, `Nb_employes`) VALUES
+(1, 'None', '', 15, 0),
+(2, 'Eurhéka', '', 5, 1);
