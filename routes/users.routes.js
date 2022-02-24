@@ -1,85 +1,47 @@
-const connection = require("../db-config");
 const router = require("express").Router();
-const user= require('../models/users.model');
+const Users = require('../models/users.model');
+const {userInscriptionOptions}=require('../utils/definitions');
+
+router.post('/', async(req, res) => {
+    const {firstname,lastname,password,email,stage,focus,accompanied}=req.body;
+    //Setting signIn options
+    let options=0;
+    if(stage)
+        options+=userInscriptionOptions.STAGE;
+    if(focus)
+        options+=userInscriptionOptions.FOCUS;
+    if(accompanied)
+        options+=userInscriptionOptions.ACCOMPANIED;
+    const payload={firstname,lastname,password,email,options};
+    const errors=Users.validate(payload);
+    if(errors){
+        res.status(422).json({ validationErrors: errors.details });
+    }
+    else{
+        //check if user already exists
+        const existUser= await Users.findOneByMail(email);
+        if(existUser)
+        {
+            return res.status(409).json({ message: 'This email is already used' });
+        }
+        const newId=await Users.create(payload);
+        res.status(201).json({userId:newId});
+    }
+});
 router.get('/', (req, res) => {
-    connection.query('SELECT * FROM users', (err, result) => {
-      if (err) {
-        res.status(500).send('Error retrieving users from database');
-      } else {
-        res.json(result);
-      }
-    });
-  });
 
+});
 router.get('/:id', (req, res) => {
-  const userId = req.params.id;
-  connection.query(
-    'SELECT * FROM users WHERE id = ?',
-    [userId],
-    (err, results) => {
-      if (err) {
-        res.status(500).send('Error retrieving user from database');
-      } else {
-        if (results.length) res.json(results[0]);
-        else res.status(404).send('User not found');
-      }
-    }
-  );
-});
 
-router.post('/', (req, res) => {
-  const { username, password, email } = req.body;
-  connection.query(
-    'INSERT INTO users (username, password, email) VALUES (?, ?, ?)',
-    [username, password, email],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error saving the user');
-      } else {
-        const id = result.insertId;
-        const createdUser = { id, username, password, email };
-        res.status(201).json(createdUser);
-      }
-    }
-  );
 });
-
 router.put('/:id', (req, res) => {
-  const userId = req.params.id;
-  const db = connection.promise();
-  let existingUser = null;
-  db.query('SELECT * FROM users WHERE id = ?', [userId])
-    .then(([results]) => {
-      existingUser = results[0];
-      if (!existingUser) return Promise.reject('RECORD_NOT_FOUND');
-      return db.query('UPDATE users SET ? WHERE id = ?', [req.body, userId]);
-    })
-    .then(() => {
-      res.status(200).json({ ...existingUser, ...req.body });
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err === 'RECORD_NOT_FOUND')
-        res.status(404).send(`User with id ${userId} not found.`);
-      else res.status(500).send('Error updating a user');
-    });
-});
 
-router.delete('/:id', (req, res) => {
-  connection.query(
-    'DELETE FROM users WHERE id = ?',
-    [req.params.id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Error deleting an user');
-      } else {
-        if (result.affectedRows) res.status(200).send('🎉 User deleted!');
-        else res.status(404).send('User not found.');
-      }
-    }
-  );
 });
+router.delete('/:id', (req, res) => {
+
+});
+router.post('/login/',async (req,res)=>{
+
+})
 
 module.exports = router;

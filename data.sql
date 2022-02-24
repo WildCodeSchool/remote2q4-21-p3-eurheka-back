@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `job_date` DATE NULL,
   `id_enterprise` INT NULL,
   `enterprise_name` VARCHAR(150) NULL,
+  `signin_options` TINYINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_users`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   INDEX `fk_user_enterprise_idx` (`id_enterprise` ASC) VISIBLE,
