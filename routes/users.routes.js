@@ -5,7 +5,6 @@ const { userInscriptionOptions } = require('../utils/definitions');
 
 router.post('/', async (req, res) => {
     const { firstname, lastname, password, email, stage, focus, accompanied } = req.body;
-    console.log(req.body);
     //Setting signIn options
     let options = 0;
     if (stage)
@@ -17,7 +16,13 @@ router.post('/', async (req, res) => {
     const payload = { firstname, lastname, password, email, options };
     const errors = Users.validate(payload);
     if (errors) {
-        res.status(422).json({ validationErrors: errors.details });
+        const errorDetails = errors.details;
+        const errorArray = [];
+        errorDetails.forEach((error) => {
+            errorArray.push(error.message);
+        });
+
+        res.status(422).json(errorArray);
     }
     else {
         //check if user already exists
@@ -45,18 +50,17 @@ router.post('/login/', async (req, res) => {
     //Check if email et pass are corrects
     const errors = Users.validateLogin(req.body);
     if (errors) {
-        return  res.status(422).json({ validationErrors: errors.details });
+        return res.status(422).json({ validationErrors: errors.details });
     }
     //Check if user exists
-    const userExist= await Users.findOneByMailForLogin(req.body.email);
-    if(!userExist){
+    const userExist = await Users.findOneByMailForLogin(req.body.email);
+    if (!userExist) {
         return res.status(404).send('User not found');
     }
     console.log(userExist);
     //CheckPassword
-    const userOK=await Users.checkPassword(req.body.password,userExist.password);
-    if(!userOK)
-    {
+    const userOK = await Users.checkPassword(req.body.password, userExist.password);
+    if (!userOK) {
         return res.status(401).send('Wrong password')
     }
     //create token
