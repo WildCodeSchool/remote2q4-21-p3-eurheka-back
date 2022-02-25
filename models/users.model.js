@@ -22,15 +22,29 @@ const validate=(data,forCreation=true)=>{
     }).validate(data, { abortEarly: false }).error;
 }
 
+const validateLogin=(data)=>{
+        return Joi.object({
+            email: Joi.string().email().max(255).presence('required'),
+            password: Joi.string().min(8).max(50).presence('required'),
+        }).validate(data, { abortEarly: false }).error;
+}
+
 const hashPassword = (plainPassword) => {
     return argon2.hash(plainPassword, hashingOptions);
   };
 
 const findOneByMail=(email)=>{
     return db
-    .query("SELECT id_users FROM users WHERE email=?",[email])
+    .query("SELECT id_users, FROM users WHERE email=?",[email])
     .then(([result])=>result[0]);
 } 
+
+const findOneByMailForLogin=(email)=>{
+    return db
+    .query("SELECT id_users,password,user_level FROM users WHERE email=?",[email])
+    .then(([result])=>result[0]);
+} 
+
 const create=async ({firstname,lastname,password,email,options})=>{
     const hashedPassword= await hashPassword(password);
     return db
@@ -46,9 +60,17 @@ const create=async ({firstname,lastname,password,email,options})=>{
     });
 
 }
+const checkPassword=(plainPassword,hashedPassword)=>{
+    return argon2.verify(hashedPassword, plainPassword, hashingOptions);
+}
+
 module.exports = {
     validate,
     hashPassword,
     create,
     findOneByMail,
+    validateLogin,
+    findOneByMailForLogin,
+    checkPassword,
+
 }
