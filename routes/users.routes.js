@@ -5,6 +5,7 @@ const { userInscriptionOptions } = require('../utils/definitions');
 
 router.post('/', async (req, res) => {
     const { firstname, lastname, password, email, stage, focus, accompanied } = req.body;
+    console.log(req.body);
     //Setting signIn options
     let options = 0;
     if (stage)

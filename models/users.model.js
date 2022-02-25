@@ -35,7 +35,7 @@ const hashPassword = (plainPassword) => {
 
 const findOneByMail=(email)=>{
     return db
-    .query("SELECT id_users, FROM users WHERE email=?",[email])
+    .query("SELECT id_users FROM users WHERE email=?",[email])
     .then(([result])=>result[0]);
 } 
 
