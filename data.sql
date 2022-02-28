@@ -501,3 +501,7 @@ INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 INSERT INTO `enterprise` (`id_enterprise`, `name`, `adress`, `id_activity`, `Nb_employes`) VALUES
 (1, 'None', '', 15, 0),
 (2, 'Eurhéka', '', 5, 1);
+
+INSERT INTO `resource_category` (`id_resource_category`, `name_resource_category`) VALUES
+(1, 'Vidéo'),
+(2, 'PDF');
