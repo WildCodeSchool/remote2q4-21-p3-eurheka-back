@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 .env
 users.routes_old.js
+utils/mail.js

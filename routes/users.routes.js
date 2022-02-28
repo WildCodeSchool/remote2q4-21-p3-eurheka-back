@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
-const { userInscriptionOptions } = require('../utils/definitions');
+const { userInscriptionOptions, maxAge } = require('../utils/definitions');
+const { calculateToken } = require('../utils/auth');
 
 router.post('/', async (req, res) => {
     const { firstname, lastname, password, email, stage, focus, accompanied } = req.body;
@@ -34,6 +35,11 @@ router.post('/', async (req, res) => {
         res.status(201).json({ userId: newId });
     }
 });
+router.get('/logout/', (req, res) => {
+    res.cookie('jwt','',{maxAge:1});
+    res.redirect('/');
+    
+});
 router.get('/', (req, res) => {
     res.sendStatus(404);
 });
@@ -57,19 +63,22 @@ router.post('/login/', async (req, res) => {
     if (!userExist) {
         return res.status(404).send('User not found');
     }
-    console.log(userExist);
     //CheckPassword
     const userOK = await Users.checkPassword(req.body.password, userExist.password);
     if (!userOK) {
         return res.status(401).send('Wrong password')
     }
     //create token
+    try {
+        const token = calculateToken(userExist.id_users, userExist.user_level, maxAge);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
+        res.status(200).json({ userId: userExist.id_users });
+    }
+    catch (err) {
+        res.sendStatus(500);
+        console.error(err);
+    }
+});
 
-    //Envoie de l'information
-    res.sendStatus(200);
-});
-router.get('/logout/', (req, res) => {
-    res.sendStatus(404);
-});
 
 module.exports = router;

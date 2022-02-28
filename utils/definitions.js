@@ -8,12 +8,17 @@ const userRole =
     UN_CONNECTED: 1
 }
 
-const userInscriptionOptions={
-    STAGE:1,
-    ACCOMPANIED:2,
-    FOCUS:4
+const userInscriptionOptions = {
+    STAGE: 1,
+    ACCOMPANIED: 2,
+    FOCUS: 4
 }
+
+//expiration token and cookie
+const maxAge = 1000 * 60 * 60 //1 hour
+
 module.exports = {
     userRole,
-    userInscriptionOptions
+    userInscriptionOptions,
+    maxAge,
 }
