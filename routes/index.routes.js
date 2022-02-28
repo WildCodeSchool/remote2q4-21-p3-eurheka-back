@@ -9,6 +9,7 @@ const opinionRouter = require('./opinions.routes');
 const reportRouter = require('./reports.routes');
 const resourceRouter = require('./resources.routes');
 const themeRouter = require('./themes.routes');
+const sendMail = require('./sendmail.routes');
 
 router.use('/users', usersRouter);
 router.use('/session', authRouter);
@@ -20,5 +21,5 @@ router.use('/opinion', opinionRouter);
 router.use('/report', reportRouter);
 router.use('/resource', resourceRouter);
 router.use('/theme', themeRouter);
-router.use('/sendmail',);
+router.use('/mail',sendMail);
 module.exports = router;
