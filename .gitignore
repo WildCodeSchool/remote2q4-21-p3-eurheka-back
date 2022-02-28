@@ -2,4 +2,5 @@ node_modules/
 .vscode
 .DS_Store
 .env
+users.routes_old.js
 routes/users.routes_old.js
