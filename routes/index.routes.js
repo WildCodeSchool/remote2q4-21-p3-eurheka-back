@@ -20,5 +20,5 @@ router.use('/opinion', opinionRouter);
 router.use('/report', reportRouter);
 router.use('/resource', resourceRouter);
 router.use('/theme', themeRouter);
-
+router.use('/sendmail',);
 module.exports = router;
