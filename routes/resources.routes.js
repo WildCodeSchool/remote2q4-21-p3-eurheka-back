@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const resource = require('../models/resources.model');
+const { checkLevel, checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Resource
-router.get('/', (req, res) => {
+router.get('/',checkLevel ,(req, res) => {
     //Check user connection and level
-
+    console.log(req.userData.user_level);
     //Get information from model
 });
 router.get('/:id', (req, res) => {

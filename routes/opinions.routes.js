@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const Opinion = require('../models/opinions.model');
 const Entreprise = require('../models/enterprises.model');
-const { userCheck, checkLevel } = require('../middleware/UserValidation');
+const { userCheck, checkAdmin } = require('../middleware/UserValidation');
 
-router.get('/', userCheck, checkLevel, (req, res) => {
+router.get('/', userCheck, checkAdmin, (req, res) => {
     //This route must be protected and only for administrator
     Opinion.findAll()
         .then((result) => {
@@ -29,7 +29,7 @@ router.get('/eurheka/', (req, res) => {
         })
 });
 
-router.get('/enterprise/:id', userCheck, checkLevel, (req, res) => {
+router.get('/enterprise/:id', userCheck, checkAdmin, (req, res) => {
     //this route must be protected and visible only for superadmin, or entreprise concerned
     Entreprise.findOne(req.params.id)
         .then((id) => {
@@ -48,7 +48,7 @@ router.get('/enterprise/:id', userCheck, checkLevel, (req, res) => {
         })
 });
 
-router.get('/:id', userCheck, checkLevel, (req, res) => {
+router.get('/:id', userCheck, checkAdmin, (req, res) => {
     //this route must be protected, only for superadmin
     Opinion.findOne(req.params.id)
         .then((opinion) => {
@@ -67,8 +67,7 @@ router.get('/:id', userCheck, checkLevel, (req, res) => {
 
 router.post('/', userCheck, async (req, res) => {
     //This route must be protected, =>for connected users
-    //Get id_user via token, to do.
-    const user_id = 1; //for tests
+    const user_id = req.userData.user_id; //for tests
     //Check if enterprise is set
     let enterprise_id = 0;
     const { entreprise, opinion } = req.body;
@@ -101,7 +100,7 @@ router.post('/', userCheck, async (req, res) => {
     }
 });
 
-router.put('/:id', userCheck, checkLevel, async (req, res) => {
+router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     //this route must be protected, only for super admin
     //Check if Opinion is in DB
     const opinionExists = await Opinion.findOne(req.params.id);
