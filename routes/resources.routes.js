@@ -7,7 +7,6 @@ router.get('/bycat/:id',checkLevel ,async (req, res) => {
     //Check user connection and level
     const userLevel=req.userData.user_level;
     const idCategory=req.params.id;
-    //Get information from model
     const result= await resource.findAllByCategory(userLevel,idCategory);
     if(result){
         res.status(200).json(result);
@@ -15,6 +14,12 @@ router.get('/bycat/:id',checkLevel ,async (req, res) => {
     else{
         res.sendStatus(500);
     }
+});
+
+router.get('/',checkLevel ,(req, res) => {
+    //Check user connection and level
+    console.log(req.userData.user_level);
+    //Get information from model
 });
 router.get('/:id', (req, res) => {
     res.sendStatus(404);
