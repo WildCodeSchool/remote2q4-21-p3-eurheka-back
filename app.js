@@ -6,7 +6,7 @@ const router = require('./routes/index.routes');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 8000;
 const corsOptions ={
-  origin:'http://localhost:3000', 
+  origin:process.env.CLIENT_URL, 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
