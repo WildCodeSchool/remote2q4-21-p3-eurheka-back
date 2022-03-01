@@ -10,12 +10,11 @@ router.get('/bycat/:id',checkLevel  ,async (req, res) => {
     //Get information from model
     const result= await resource.findAllByCategory(userLevel, idCategory);
     if (result){
-        res.sendStatus(200).json(result);
+        res.status(200).json(result);
     }
     else {
         res.sendStatus(500);
     }
-    res.sendStatus(404);
 });
 router.get('/:id', (req, res) => {
     res.sendStatus(404);

@@ -4,7 +4,7 @@ const Joi = require('joi');
 const db = connection.promise();
 
 const findAllByCategory=(level,category) =>{
-    let sql="SELECT id_resource, is_cat, name, path FROM resource WHERE id_cat=? AND visibility=1";
+    let sql="SELECT id_resource, id_cat, name, path FROM resource WHERE id_cat=? AND visibility=1";
     const sqlArray=[];
     sqlArray.push(category);
     sqlArray.push(1)
