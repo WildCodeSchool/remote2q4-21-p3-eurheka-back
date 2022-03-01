@@ -3,12 +3,18 @@ const resource = require('../models/resources.model');
 const { checkLevel, checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Resource
-router.get('/',checkLevel ,(req, res) => {
+router.get('/bycat/:id',checkLevel ,async (req, res) => {
     //Check user connection and level
     const userLevel=req.userData.user_level;
+    const idCategory=req.params.id;
     //Get information from model
-
-    res.sendStatus(404);
+    const result= await resource.findAllByCategory(userLevel,idCategory);
+    if(result){
+        res.status(200).json(result);
+    }
+    else{
+        res.sendStatus(500);
+    }
 });
 router.get('/:id', (req, res) => {
     res.sendStatus(404);
