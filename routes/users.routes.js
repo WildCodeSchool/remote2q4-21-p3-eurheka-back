@@ -54,10 +54,8 @@ router.delete('/:id', (req, res) => {
 });
 router.post('/login/', async (req, res) => {
     //Check if email et pass are corrects
-    console.log(req.body);
     const errors = Users.validateLogin(req.body);
     if (errors) {
-        console.log(errors);
         return res.status(422).json({ validationErrors: errors.details });
     }
     //Check if user exists
