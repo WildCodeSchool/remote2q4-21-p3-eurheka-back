@@ -7,7 +7,19 @@ const userCheck = (req, res, next) => {
 }
 
 const checkLevel = (req, res, next) => {
-    //Check User Level
+    const userToken=req.cookies.jwt;
+    if(!userToken){
+        req.userData={user_level:userRole.UN_CONNECTED};
+    }
+    else{
+        try{
+            const userData=jwt.verify(userToken,process.env.PRIVATE_KEY);
+            req.userData=userData;
+        }
+        catch {
+            req.userData={user_level:userRole.UN_CONNECTED};
+        }
+    }
     next();
 }
 
