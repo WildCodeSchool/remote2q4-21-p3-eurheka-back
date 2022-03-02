@@ -6,11 +6,35 @@ router.get('/', (req, res) => {
 
 });
 router.get('/:id', (req, res) => {
-
+    event.findOne(req.params.id)
+        .then((event) => {
+            if (event) {
+                res.status(200).json(event[0])
+            }
+            else {
+                res.status(404).send('Event not found')
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Internal Error');
+        })
 });
 router.post('/', (req, res) => {
-
-});
+    const error = event.validate(req.body);
+    if (error) {
+      res.status(422).json({ validationErrors: error.details });
+    } else {
+      event.create(req.body)
+        .then((createdEvent) => {
+          res.status(201).json(createdEvent);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Error saving the movie');
+        });
+    }
+  });
 router.put('/:id', (req, res) => {
 
 });
