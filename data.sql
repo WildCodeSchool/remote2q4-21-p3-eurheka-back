@@ -14,9 +14,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 DROP TABLE IF EXISTS `category_events` ;
 
 CREATE TABLE IF NOT EXISTS `category_events` (
-  `id_categoriy` INT NOT NULL AUTO_INCREMENT,
+  `id_category` INT NOT NULL AUTO_INCREMENT,
   `category_name` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`id_categoriy`))
+  PRIMARY KEY (`id_category`))
 ENGINE = InnoDB;
 
 
@@ -115,6 +115,7 @@ DROP TABLE IF EXISTS `event_to_user` ;
 CREATE TABLE IF NOT EXISTS `event_to_user` (
   `id_event` INT NOT NULL,
   `id_user` INT NOT NULL,
+  `is_owner` BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`id_event`, `id_user`),
   INDEX `fk_user_idx` (`id_user` ASC) VISIBLE,
   CONSTRAINT `fk_event_user`
@@ -504,4 +505,5 @@ INSERT INTO `enterprise` (`id_enterprise`, `name`, `adress`, `id_activity`, `Nb_
 
 INSERT INTO `resource_category` (`id_resource_category`, `name_resource_category`) VALUES
 (1, 'Vidéo'),
-(2, 'PDF');
+(2, 'Documents à télécharger'),
+(3,'Fiches métiers');
