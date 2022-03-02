@@ -8,19 +8,15 @@ const validate = (data, forCreation = true) => {
     return Joi.object({
       category: Joi.number().integer().presence(presence),
       name: Joi.string().max(200).presence(presence),
-      date: Joi.date().timestamp().presence(presence),
+      date: Joi.string().isoDate().presence(presence),
     }).validate(data, { abortEarly: false }).error;
   };
 
 const findOne = (id) => {
     return db
-        .query("SELECT id_event, id_cat, name, date_event FROM event WHERE id_event=?", [id])
-        .then(([result]) => result[0])
-        .catch((err) => {
-            console.error(err);
-            return err;
-        });
-}
+      .query('SELECT * FROM event WHERE id_event = ?', [id])
+      .then(([results]) => results[0]);
+  };
 
 const findAllByCategory=(category) =>{
     let sql="SELECT * FROM event WHERE id_cat=?";
@@ -47,9 +43,22 @@ const create = ({ category, name, date }) => {
         });
 }
 
+const associateWithUser = (idEvent, idUser) => {
+    return db
+        .query('INSERT INTO event_to_user  (id_event, id_user) VALUES (?, ?)', [idEvent, idUser])
+        .then(([result]) => {
+            return {idEvent, idUser};
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
 module.exports = {
     validate,
     findAllByCategory,
     findOne, 
-    create
+    create,
+    associateWithUser
 }
