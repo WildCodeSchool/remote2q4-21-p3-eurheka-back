@@ -37,8 +37,7 @@ const findAllRelatedToUser= (userId) => {
         .catch((err) => {
             console.log(err);
             return err;
-        })
-    
+        })    
 }
 
 const create = ({ category, name, date }) => {

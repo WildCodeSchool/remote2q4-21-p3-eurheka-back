@@ -5,7 +5,6 @@ const {userCheck}=require('../middleware/UserValidation');
 router.get('/', (req, res) => {
 
 });
-
 router.get('/myevents/', userCheck, (req, res) => {
     userId=req.userData.user_id;
     console.log(userId);
@@ -67,6 +66,7 @@ router.post('/',userCheck ,(req, res) => {
         });
     }
   });
+
 router.put('/:id', (req, res) => {
 
 });
