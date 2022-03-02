@@ -485,9 +485,9 @@ INSERT INTO `job_category` (`id_job_category`, `name`) VALUES
 (29, 'Sport et loisirs');
 
 DROP VIEW IF EXISTS `view_opinion`;
-CREATE ALGORITHM=UNDEFINED  VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)))  ;
-DROP VIEW IF EXISTS `view_event_user`
-CREATE VIEW `view_event_user` AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` AS `name`, `e`.`date_event` AS `event`, `c`.`category_name` AS `cat`, `eu`.`is_owner` AS `is_owner`, `u`.`id_users` AS `id_users` FROM (((`users` `u` join `event_to_user` `eu` on((`eu`.`id_user` = `u`.`id_users`))) join `event` `e` on((`e`.`id_event` = `eu`.`id_event`))) join `category_events` `c` on((`c`.`id_category` = `e`.`id_cat`)))  ;
+CREATE ALGORITHM=UNDEFINED  VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)));
+DROP VIEW IF EXISTS `view_event_user`;
+CREATE VIEW `view_event_user` AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` AS `name`, `e`.`date_event` AS `event`, `c`.`category_name` AS `cat`, `eu`.`is_owner` AS `is_owner`, `u`.`id_users` AS `id_users` FROM (((`users` `u` join `event_to_user` `eu` on((`eu`.`id_user` = `u`.`id_users`))) join `event` `e` on((`e`.`id_event` = `eu`.`id_event`))) join `category_events` `c` on((`c`.`id_category` = `e`.`id_cat`)));
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),
