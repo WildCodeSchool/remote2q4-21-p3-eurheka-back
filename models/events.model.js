@@ -19,7 +19,7 @@ const findOne = (id) => {
   };
 
 const findAllByCategory=(category) =>{
-    let sql="SELECT * FROM event WHERE id_cat=?";
+    let sql="SELECT * FROM event WHERE id_cat = ?";
     const sqlArray=[category];
     return db
         .query(sql, sqlArray)
@@ -28,6 +28,17 @@ const findAllByCategory=(category) =>{
             console.log(err);
             return err;
         });
+}
+
+const findAllRelatedToUser= (userId) => {
+    return db
+        .query("SELECT * FROM view_event_user WHERE id_users = ?", [userId])
+        .then(([results]) => results)
+        .catch((err) => {
+            console.log(err);
+            return err;
+        })
+    
 }
 
 const create = ({ category, name, date }) => {
@@ -60,5 +71,6 @@ module.exports = {
     findAllByCategory,
     findOne, 
     create,
-    associateWithUser
+    associateWithUser,
+    findAllRelatedToUser
 }

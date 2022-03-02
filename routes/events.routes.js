@@ -6,7 +6,25 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/:id', (req, res) => {
+router.get('/myevents/', userCheck, (req, res) => {
+    userId=req.userData.user_id;
+    console.log(userId);
+    event.findAllRelatedToUser(userId)
+        .then((event) => {
+            if (event) {
+                res.status(200).json(event)
+            }
+            else {
+                res.status(404).send('Event not found')
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Internal Error');
+        })
+})
+
+router.get('/:id',userCheck ,(req, res) => {
     //Must be auth validation//
     event.findOne(req.params.id)
         .then((event) => {
