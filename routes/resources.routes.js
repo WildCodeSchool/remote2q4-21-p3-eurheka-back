@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const resource = require('../models/resources.model');
-const { checkLevel, checkAdmin } = require('../middleware/UserValidation');
+const { userCheck,checkLevel, checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Resource
 router.get('/bycat/:id',checkLevel  ,async (req, res) => {
@@ -10,23 +10,36 @@ router.get('/bycat/:id',checkLevel  ,async (req, res) => {
     //Get information from model
     const result= await resource.findAllByCategory(userLevel, idCategory);
     if (result){
-        res.status(200).json(result);
+       return res.status(200).json(result);
     }
     else {
-        res.sendStatus(500);
+      return  res.sendStatus(500);
     }
 });
+router.get('/adminCat/:id',userCheck,checkAdmin   ,async (req, res) => {
+    //Check user connection and level
+    const idCategory=req.params.id;
+    //Get information from model
+    const result= await resource.findAllByCategoryAdmin(idCategory);
+    if (result){
+       return res.status(200).json(result);
+    }
+    else {
+      return  res.sendStatus(500);
+    }
+});
+
 router.get('/:id', (req, res) => {
-    res.sendStatus(404);
+   return res.sendStatus(404);
 });
 router.post('/', (req, res) => {
-    res.sendStatus(404);
+  return  res.sendStatus(404);
 });
 router.put('/:id', (req, res) => {
-    res.sendStatus(404);
+   return res.sendStatus(404);
 });
 router.delete('/:id', (req, res) => {
-    res.sendStatus(404);
+   return res.sendStatus(404);
 });
 
 //CRUD Resources Category
