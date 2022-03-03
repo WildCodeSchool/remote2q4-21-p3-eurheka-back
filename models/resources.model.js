@@ -3,10 +3,11 @@ const Joi = require('joi');
 const {userRole} =require('../utils/definitions');
 const db = connection.promise();
 
-/*const findOne = (id) => {
+const findOneAdmin = (id) => {
     return db
-        .query("SELECT id_resource,id")
-}*/
+        .query("SELECT id_resource,id_cat, name, path, visibility, id_theme, themename, name_resource_category FROM view_resource_theme WHERE id_resource= ?",[id])
+        .then(([result])=>{return result})
+}
 
 const findAllByCategory = (level, category) => {
     const sqlArray = [];
@@ -47,4 +48,5 @@ const findAllByCategoryAdmin = (category) => {
 module.exports = {
     findAllByCategory,
     findAllByCategoryAdmin,
+    findOneAdmin,
 }
