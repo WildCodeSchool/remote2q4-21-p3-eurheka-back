@@ -14,9 +14,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 DROP TABLE IF EXISTS `category_events` ;
 
 CREATE TABLE IF NOT EXISTS `category_events` (
-  `id_categoriy` INT NOT NULL AUTO_INCREMENT,
+  `id_category` INT NOT NULL AUTO_INCREMENT,
   `category_name` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`id_categoriy`))
+  PRIMARY KEY (`id_category`))
 ENGINE = InnoDB;
 
 
