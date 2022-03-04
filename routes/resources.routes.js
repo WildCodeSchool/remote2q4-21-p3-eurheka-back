@@ -50,10 +50,10 @@ router.get('/admin/:id', userCheck, checkAdmin,async (req, res) => {
     }
     else
         return res.status(200).json([]);
-});/*
+});
 router.get('/:id', (req, res) => {
-    return res.sendStatus(404);
-});*/
+    return res.status(404).send('A completer');
+});
 router.post('/', (req, res) => {
     return res.sendStatus(404);
 });
