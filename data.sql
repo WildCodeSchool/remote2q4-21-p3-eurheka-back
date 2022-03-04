@@ -115,6 +115,7 @@ DROP TABLE IF EXISTS `event_to_user` ;
 CREATE TABLE IF NOT EXISTS `event_to_user` (
   `id_event` INT NOT NULL,
   `id_user` INT NOT NULL,
+  `is_owner` BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (`id_event`, `id_user`),
   INDEX `fk_user_idx` (`id_user` ASC) VISIBLE,
   CONSTRAINT `fk_event_user`
@@ -484,7 +485,13 @@ INSERT INTO `job_category` (`id_job_category`, `name`) VALUES
 (29, 'Sport et loisirs');
 
 DROP VIEW IF EXISTS `view_opinion`;
-CREATE ALGORITHM=UNDEFINED  VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)))  ;
+CREATE ALGORITHM=UNDEFINED  VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)));
+
+DROP VIEW IF EXISTS `view_event_user`;
+CREATE VIEW `view_event_user` AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` AS `name`, `e`.`date_event` AS `event`, `c`.`category_name` AS `cat`, `eu`.`is_owner` AS `is_owner`, `u`.`id_users` AS `id_users` FROM (((`users` `u` join `event_to_user` `eu` on((`eu`.`id_user` = `u`.`id_users`))) join `event` `e` on((`e`.`id_event` = `eu`.`id_event`))) join `category_events` `c` on((`c`.`id_category` = `e`.`id_cat`)));
+
+DROP VIEW IF EXISTS `view_resource_theme`;
+CREATE VIEW `view_resource_theme`  AS SELECT `r`.`id_resource` AS `id_resource`, `r`.`id_cat` AS `id_cat`, `r`.`name` AS `name`, `r`.`path` AS `path`, `r`.`visibility` AS `visibility`, `tt`.`id_theme` AS `id_theme`, `tt`.`id_ressource` AS `id_ressource`, `theme`.`name` AS `themename`, `resource_category`.`name_resource_category` AS `name_resource_category` FROM (((`resource` `r` left join `theme_to_ressources` `tt` on((`tt`.`id_ressource` = `r`.`id_resource`))) left join `theme` on((`theme`.`id_theme` = `tt`.`id_theme`))) join `resource_category` on((`r`.`id_cat` = `resource_category`.`id_resource_category`))) ORDER BY `r`.`id_resource` ASC  ;
 
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
@@ -501,3 +508,8 @@ INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 INSERT INTO `enterprise` (`id_enterprise`, `name`, `adress`, `id_activity`, `Nb_employes`) VALUES
 (1, 'None', '', 15, 0),
 (2, 'Eurhéka', '', 5, 1);
+
+INSERT INTO `resource_category` (`id_resource_category`, `name_resource_category`) VALUES
+(1, 'Vidéo'),
+(2, 'Documents à télécharger'),
+(3,'Fiches métiers');

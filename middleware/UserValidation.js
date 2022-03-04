@@ -44,7 +44,7 @@ const checkAdmin=(req, res, next) =>{
     next();
 }
 const checkSuperAdmin=(req, res, next) =>{
-    const user_level=req.userData.user_level;
+    const userLevel=req.userData.user_level;
     if(userLevel<userRole.SUPER_ADMIN){
         return res.sendStatus(401);
     }
