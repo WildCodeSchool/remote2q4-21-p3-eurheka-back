@@ -10,6 +10,13 @@ const getAll=()=>{
         .catch((err)=>console.log(err));
 }
 
+const destroybyResource=(id)=>{
+    return db
+        .query("DELETE * FROM theme_to_ressources WHERE id_ressource=?",[id])
+        .then(([result])=>result.affectedRows)
+        .catch((err)=>console.log(err));
+}
 module.exports = {
     getAll,
+    destroybyResource,
 }
