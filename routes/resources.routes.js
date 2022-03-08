@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const resource = require('../models/resources.model');
 const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidation');
-
+const theme =require('../models/themes.model');
 //CRUD Resource
 router.get('/bycat/:id', checkLevel, async (req, res) => {
     //Check user connection and level
@@ -22,6 +22,7 @@ router.get('/adminCat/:id', userCheck, checkAdmin, async (req, res) => {
     //Get information from model
     const result = await resource.findAllByCategoryAdmin(idCategory);
     if (result) {
+        //Send result
         return res.status(200).json(result);
     }
     else {
@@ -33,6 +34,8 @@ router.get('/admin/:id', userCheck, checkAdmin,async (req, res) => {
     const result=await resource.findOneAdmin(docId);
     console.log(result);
     if(result&&result.length>0){
+         //Get all themes and check if theme is in theme
+        const themeList=await theme.getAll();
         const name=result[0].name;
         const idDoc=result[0].id_resource;
         const path=result[0].path;
@@ -44,8 +47,21 @@ router.get('/admin/:id', userCheck, checkAdmin,async (req, res) => {
             let idTheme=item.id_theme;
             let themeName=item.themename;
             themes.push({idTheme,themeName});
-        })
-        const doc={name,idDoc,path,idCat,visibility,CategoryResource,themes};
+        });
+
+        const ThemeDocArray=[];
+        //Checked if all themes are checked
+        themeList.forEach((themeItem)=>{
+            let checked=false;
+            themes.forEach((themeDoc)=>{
+                if(themeItem.id_theme===themeDoc.idTheme)
+                    checked=true;
+            });
+            ThemeDocArray.push({idTheme:themeItem.id_theme,
+                checked,
+                themeName:themeItem.name});
+        });
+        const doc={name,idDoc,path,idCat,visibility,CategoryResource,themes:ThemeDocArray};
         return res.status(200).json(doc);
     }
     else
