@@ -45,8 +45,20 @@ const findAllByCategoryAdmin = (category) => {
         });
 }
 
+const destroy=(id)=>{
+    
+    return db
+        .query("DELETE FROM resource WHERE id_resource=?",[id])
+        .then(([result])=>result.affectedRows)
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
+}
+
 module.exports = {
     findAllByCategory,
     findAllByCategoryAdmin,
     findOneAdmin,
+    destroy,
 }
