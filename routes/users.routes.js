@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
             errorArray.push(error.message);
         });
 
-        res.status(422).json(errorArray);
+        return res.status(422).json(errorArray);
     }
     else {
         //check if user already exists
@@ -34,23 +34,6 @@ router.post('/', async (req, res) => {
         const newId = await Users.create(payload);
         res.status(201).json({ userId: newId });
     }
-});
-router.get('/logout/', (req, res) => {
-    res.cookie('jwt','',{maxAge:1});
-    res.redirect('/');
-    
-});
-router.get('/', (req, res) => {
-    res.sendStatus(404);
-});
-router.get('/:id', (req, res) => {
-    res.sendStatus(404);
-});
-router.put('/:id', (req, res) => {
-    res.sendStatus(404);
-});
-router.delete('/:id', (req, res) => {
-    res.sendStatus(404);
 });
 router.post('/login/', async (req, res) => {
     //Check if email et pass are corrects
@@ -78,6 +61,24 @@ router.post('/login/', async (req, res) => {
         res.sendStatus(500);
         console.error(err);
     }
+});
+
+router.get('/logout/', (req, res) => {
+    res.cookie('jwt','',{maxAge:1});
+    res.redirect('/');
+    
+});
+router.get('/', (req, res) => {
+    res.sendStatus(404);
+});
+router.get('/:id', (req, res) => {
+    res.sendStatus(404);
+});
+router.put('/:id', (req, res) => {
+    res.sendStatus(404);
+});
+router.delete('/:id', (req, res) => {
+    res.sendStatus(404);
 });
 
 
