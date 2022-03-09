@@ -90,11 +90,6 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', userCheck, checkAdmin, async (req, res) => {
-    /* We have
-    idDoc
-    name
-    visibility
-    themes[{idTheme,checked themeName}]*/
     const returnArray = [];
     //check if resource exists
     const resourceExists = await resource.findOne(req.params.id);
