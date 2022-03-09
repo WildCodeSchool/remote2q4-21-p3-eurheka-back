@@ -7,6 +7,9 @@ router.get('/', userCheck, checkAdmin, async (req,res)=>
 {
     // get enterprises data
     const enterprises = await enterprise.findAll();
+    if (enterprises.errno) {
+        return res.sendstatus(500)
+    }
     if (enterprises)
     return res.status(200).json(enterprises);
     else
@@ -17,6 +20,9 @@ router.get('/:id', userCheck, checkAdmin, (req,res)=>
 {
     enterprise.findOne(req.params.id)
         .then((enterprise) => {
+            if (enterprise.errno) {
+                return res.sendstatus(500)
+            }
             if (enterprise) {
                 res.status(200).json(enterprise)
             }
@@ -43,6 +49,9 @@ router.post('/', userCheck, async (req,res)=>
         return res.status(422).json(errorArray);
     }
     const idEnterprise = await enterprise.createOne(req.body);
+    if (idEnterprise.errno) {
+        return res.sendstatus(500)
+    }
     if (idEnterprise) {
         return res.status(201).json({idEnterprise});
     } else {
@@ -53,6 +62,9 @@ router.post('/', userCheck, async (req,res)=>
 router.put('/:id',userCheck, checkAdmin, async (req,res)=>
 {
     const enterpriseExists = await enterprise.findOne(req.params.id);
+    if (enterpriseExists.errno) {
+        return res.sendstatus(500)
+    }
     if (enterpriseExists) {
         const error = enterprise.validate(req.body, forCreation = false);
         if (error) {
@@ -64,6 +76,9 @@ router.put('/:id',userCheck, checkAdmin, async (req,res)=>
             return res.status(422).json(errorArray);
         }
         const enterpriseUpdate = await enterprise.update(req.body, req.params.id);
+        if (enterpriseUpdate.errno) {
+            return res.sendstatus(500)
+        }
         if (enterpriseUpdate) {
             return res.status(200).json(`Enterprise id=${req.params.id} updated`);
         } else {
@@ -78,6 +93,9 @@ router.put('/:id',userCheck, checkAdmin, async (req,res)=>
 router.delete('/:id', userCheck, checkAdmin, async (req,res)=>
 {
     const result = await enterprise.remove(req.params.id);
+    if (result.errno) {
+        return res.sendstatus(500)
+    }
     if (result === true){
         return res.status(200).send('Enterprise deleted')
     }
