@@ -17,6 +17,31 @@ router.get('/', async (req,res)=>
         return res.sendStatus(500);
 });
 
+router.get('/admin/', async (req,res)=>
+{
+    //get all categories
+    const result=await theme.getAll();
+    if(result&&(typeof(result.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    if(result)
+    {
+        const tempTheme=[];
+        result.forEach((theme)=>{
+
+            let newTheme={
+                idTheme:theme.id_theme,
+                checked:false,
+                themeName:theme.name
+            }
+            tempTheme.push(newTheme);
+        })
+        return res.status(200).json(tempTheme);
+    }
+    else
+        return res.sendStatus(500);
+});
+
 router.get('/:id',async (req,res)=>
 {
     const result=await theme.findOne(req.params.id);
