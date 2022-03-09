@@ -12,10 +12,34 @@ const validate = (data, forCreation = true) => {
     }).validate(data, { abortEarly: false }).error;
 }
 
+const validateTheme=(data) => {
+    const presence = 'required';
+    return Joi.object({
+        idTheme: Joi.number().integer().presence(presence),
+        checked: Joi.boolean().presence(presence),
+        themeName: Joi.string().max(255).presence(presence),
+    }).validate(data, { abortEarly: false }).error;
+}
+
+const findOne=(id)=>{
+    return db
+        .query("SELECT id_resource FROM resource WHERE id_resource=?",[id])
+        .then(([result])=>{ 
+            return result[0]})
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
+}
+
 const findOneAdmin = (id) => {
     return db
         .query("SELECT id_resource,id_cat, name, path, visibility, id_theme, themename, name_resource_category FROM view_resource_theme WHERE id_resource= ?",[id])
         .then(([result])=>{return result})
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
 }
 
 const findAllByCategory = (level, category) => {
@@ -54,6 +78,18 @@ const findAllByCategoryAdmin = (category) => {
         });
 }
 
+const update=(data,id)=>{
+    return db
+        .query("UPDATE resource SET ? WHERE id_resource=?",[data,id])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
+}
+
 const destroy=(id)=>{
     
     return db
@@ -71,4 +107,7 @@ module.exports = {
     findOneAdmin,
     destroy,
     validate,
+    validateTheme,
+    findOne,
+    update,
 }

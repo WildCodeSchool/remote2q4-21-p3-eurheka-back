@@ -52,6 +52,18 @@ const create = ({name}) =>{
         })
 }
 
+const add_RessourceTheme=(id_resource,id_theme)=>{
+    return db
+        .query("INSERT INTO theme_to_ressources (id_theme,id_ressource) VALUES(?,?)",[id_theme,id_resource])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}  
+
 const update=(id,{name})=>{
     return db
         .query('UPDATE theme SET name=? WHERE id_theme=?',[name,id])
@@ -83,5 +95,6 @@ const destroy=(id)=>{
         create,
         update,
         destroy,
-        validate
+        validate,
+        add_RessourceTheme
     }
