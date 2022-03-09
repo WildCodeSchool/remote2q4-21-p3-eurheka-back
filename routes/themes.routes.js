@@ -28,7 +28,7 @@ router.get('/:id',async (req,res)=>
     else
         return res.sendStatus(404);
 });
-router.post('/',async (req,res)=>
+router.post('/',checkLevel,checkAdmin,async (req,res)=>
 {
      const errors = theme.validate(req.body);
     if (errors) {
@@ -52,7 +52,7 @@ router.post('/',async (req,res)=>
     }
 
 });
-router.put('/:id',async (req,res)=>
+router.put('/:id',checkLevel,checkAdmin,async (req,res)=>
 {
     const errors = theme.validate(req.body);
     if (errors) {
@@ -78,7 +78,7 @@ router.put('/:id',async (req,res)=>
 
 });
 
-router.delete('/:id',async(req,res)=>
+router.delete('/:id',checkLevel,checkAdmin,async(req,res)=>
 {
     const result=await theme.destroy(req.params.id);
     if(result&&(typeof(result.errno)!=='undefined')){

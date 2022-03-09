@@ -3,6 +3,15 @@ const Joi = require('joi');
 const {userRole} =require('../utils/definitions');
 const db = connection.promise();
 
+const validate = (data, forCreation = true) => {
+    const presence = forCreation ? 'required' : 'optional';
+    return Joi.object({
+        visibility: Joi.number().integer().presence(presence),
+        name: Joi.string().max(255).presence(presence),
+        id_cat:Joi.number().integer().presence(presence)
+    }).validate(data, { abortEarly: false }).error;
+}
+
 const findOneAdmin = (id) => {
     return db
         .query("SELECT id_resource,id_cat, name, path, visibility, id_theme, themename, name_resource_category FROM view_resource_theme WHERE id_resource= ?",[id])
@@ -61,4 +70,5 @@ module.exports = {
     findAllByCategoryAdmin,
     findOneAdmin,
     destroy,
+    validate,
 }
