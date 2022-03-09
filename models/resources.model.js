@@ -17,7 +17,7 @@ const validateTheme=(data) => {
     return Joi.object({
         idTheme: Joi.number().integer().presence(presence),
         checked: Joi.boolean().presence(presence),
-        themeName: Joi.string().max(255).presence(presence),
+        themeName: Joi.string().max(255).presence('optional'),
     }).validate(data, { abortEarly: false }).error;
 }
 

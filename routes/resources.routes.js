@@ -158,12 +158,12 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
                 catch (e) {
                     return res.sendStatus(500);
                 }
-                return res.status(200).json(returnArray);
             }
             catch (e) {
                 return res.status(422).json(errorArrayTheme);
             }
         }
+        return res.status(200).json(returnArray);
     }
     else
         return res.status(404).send('Resource not found');
