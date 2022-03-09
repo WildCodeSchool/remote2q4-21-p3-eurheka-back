@@ -28,11 +28,17 @@ router.post('/', async (req, res) => {
     else {
         //check if user already exists
         const existUser = await Users.findOneByMail(email);
+        if(existUser.errno){
+            return res.sendStatus(500);
+        }
         if (existUser) {
             return res.status(409).json({ message: 'This email is already used' });
         }
         const newId = await Users.create(payload);
-        res.status(201).json({ userId: newId });
+        if(newId.errno){
+            return res.sendStatus(500);
+        }
+        return res.status(201).json({ userId: newId });
     }
 });
 router.post('/login/', async (req, res) => {
@@ -43,23 +49,29 @@ router.post('/login/', async (req, res) => {
     }
     //Check if user exists
     const userExist = await Users.findOneByMailForLogin(req.body.email);
+    if(userExist.errno){
+        return res.sendStatus(500);
+    }
     if (!userExist) {
         return res.status(404).send('User not found');
     }
     //CheckPassword
     const userOK = await Users.checkPassword(req.body.password, userExist.password);
+    if(userOK.errno){
+        return res.sendStatus(500);
+    }
     if (!userOK) {
-        return res.status(401).send('Wrong password')
+        return res.status(401).send('Wrong login or password')
     }
     //create token
     try {
         const token = calculateToken(userExist.id_users, userExist.user_level, maxAge);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
-        res.status(200).json({ userId: userExist.id_users });
+        return res.status(200).json({ userId: userExist.id_users });
     }
     catch (err) {
-        res.sendStatus(500);
         console.error(err);
+        return res.sendStatus(500);
     }
 });
 

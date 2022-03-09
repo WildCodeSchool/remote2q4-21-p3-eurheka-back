@@ -35,6 +35,9 @@ router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
     if (result && result.length > 0) {
         //Get all themes and check if theme is in theme
         const themeList = await theme.getAll();
+        if(themeList.errno){
+            return res.sendStatus(500);
+        }
         const name = result[0].name;
         const idDoc = result[0].id_resource;
         const path = result[0].path;
@@ -71,7 +74,7 @@ router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
 
 router.get('/:id', (req, res) => {
     return res.status(404).send('A completer');
-    
+
 });
 router.post('/', (req, res) => {
     return res.sendStatus(404);
@@ -102,20 +105,4 @@ router.delete('/:id', userCheck, checkAdmin, async (req, res) => {
       return  res.status(404).send('resource not found');
 });
 
-//CRUD Resources Category
-router.get('/category/', (req, res) => {
-    res.sendStatus(404);
-});
-router.get('/category/:id', (req, res) => {
-    res.sendStatus(404);
-});
-router.post('/category/', (req, res) => {
-    res.sendStatus(404);
-});
-router.put('/category/:id', (req, res) => {
-    res.sendStatus(404);
-});
-router.delete('/category/:id', (req, res) => {
-    res.sendStatus(404);
-});
 module.exports = router;
