@@ -2,12 +2,13 @@ const router = require("express").Router();
 const theme = require('../models/themes.model');
 
 const {checkLevel,checkAdmin}=require('../middleware/UserValidation');
+const { restart } = require("nodemon");
 
 router.get('/', async (req,res)=>
 {
     //get all categories
     const result=await theme.getAll();
-    if(result.errno){
+    if(result&&(typeof(result.errno)!=='undefined')){
         return res.sendStatus(500);
     }
     if(result)
@@ -19,8 +20,7 @@ router.get('/', async (req,res)=>
 router.get('/:id',async (req,res)=>
 {
     const result=await theme.findOne(req.params.id);
-    if(result.errno)
-    {
+    if(result&&(typeof(result.errno)!=='undefined')){
         return res.sendStatus(500);
     }
     if(result)
@@ -78,9 +78,17 @@ router.put('/:id',async (req,res)=>
 
 });
 
-router.delete('/:id',(req,res)=>
+router.delete('/:id',async(req,res)=>
 {
-
+    const result=await theme.destroy(req.params.id);
+    if(result&&(typeof(result.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    if(result){
+        return res.status(200).send('theme deleted');
+    }
+    else
+        return res.status(404).send('theme not found');
 });
 
 module.exports = router;

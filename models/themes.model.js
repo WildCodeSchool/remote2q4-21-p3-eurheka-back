@@ -68,7 +68,7 @@ const destroy=(id)=>{
     return db
         .query("DELETE FROM theme WHERE id_theme=?",[id])
         .then(([result])=>{
-            result.affectedRows!==0
+           return result.affectedRows!==0
         })
         .catch((err)=>{
             console.log(err);
