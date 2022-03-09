@@ -69,7 +69,7 @@ router.put('/:id',checkLevel,checkAdmin,async (req,res)=>
         return res.sendStatus(500);
     }
     if(updatedTheme===true){
-        return res.status(201).send('theme updated');
+        return res.status(200).send('theme updated');
     }
     else
     {
