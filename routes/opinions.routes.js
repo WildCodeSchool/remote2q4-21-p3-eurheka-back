@@ -8,7 +8,7 @@ router.get('/', userCheck, checkAdmin, (req, res) => {
     //This route must be protected and only for administrator
     Opinion.findAll()
         .then((result) => {
-            if(result.errno){
+            if(result &&(typeof(result.errno)!=='undefined')){
                 return res.sendStatus(500);
             }
             res.status(200).json(result)
@@ -22,7 +22,7 @@ router.get('/', userCheck, checkAdmin, (req, res) => {
 router.get('/eurheka/', (req, res) => {
     Entreprise.findOneByName('eurhéka')
         .then((id) => {
-            if(id.errno){
+            if(id&&(typeof(id.errno)!=='undefined')){
                 return res.sendStatus(500);
             }
             if (id === undefined) {
@@ -46,7 +46,7 @@ router.get('/enterprise/:id', userCheck, checkAdmin, (req, res) => {
     //this route must be protected and visible only for superadmin, or entreprise concerned
     Entreprise.findOne(req.params.id)
         .then((id) => {
-            if(id.errno){
+            if(id&&(typeof(id.errno)!=='undefined')){
                 return res.sendStatus(500);
             }
             if (id === undefined) {
@@ -68,7 +68,7 @@ router.get('/:id', userCheck, checkAdmin, (req, res) => {
     //this route must be protected, only for superadmin
     Opinion.findOne(req.params.id)
         .then((opinion) => {
-            if(opinion.errno){
+            if(opinion&&(typeof(opinion.errno)!=='undefined')){
                 return res.sendStatus(500);
             }
             if (opinion) {
@@ -93,7 +93,7 @@ router.post('/', userCheck, async (req, res) => {
     if (entreprise === undefined) {
         //Get Eurheka Id
         const enterprise_value = await Entreprise.findOneByName('eurhéka');
-        if(enterprise_value.errno){
+        if(enterprise_value&&(typeof(enterprise_value.errno)!=='undefined')){
             return res.sendStatus(500);
         }
         enterprise_id = enterprise_value.id_enterprise;
@@ -113,7 +113,7 @@ router.post('/', userCheck, async (req, res) => {
     else {
         Opinion.create(data)
             .then((opinionCreated) => {
-                if(opinionCreated.errno){
+                if(opinionCreated&&(typeof(opinionCreated.errno)!=='undefined')){
                     return res.sendStatus(500);
                 }
                 return res.status(201).json(opinionCreated);
@@ -129,7 +129,7 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     //this route must be protected, only for super admin
     //Check if Opinion is in DB
     const opinionExists = await Opinion.findOne(req.params.id);
-    if(opinionExists.errno){
+    if(opinionExists&&(typeof(opinionExists.errno)!=='undefined')){
         return res.sendStatus(500);
     }
     if (opinionExists) {
@@ -140,6 +140,9 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
         else {
             const { is_valid } = req.body;
             const result = await Opinion.update(req.params.id, is_valid);
+            if(result&&(typeof(result.errno)!=='undefined')){
+                return res.sendStatus(500);
+            }
             if (result === 1) {
                 res.status(200).json({ opinion_id: req.params.id, is_valid: is_valid });
             }
@@ -157,10 +160,9 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
-    //this route must be protected, only for super admin
+router.delete('/:id', userCheck, checkAdmin, async (req, res) => {
     const result = await Opinion.remove(req.params.id);
-    if(result.errno){
+    if(result&&(typeof(result.errno)!=='undefined')){
         return res.sendStatus(500);
     }
     if (result === true) {

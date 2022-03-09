@@ -1,7 +1,9 @@
 const router = require("express").Router();
+const multer =require('multer');
 const resource = require('../models/resources.model');
 const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidation');
 const theme = require('../models/themes.model');
+const {resourceCategory}=require('../utils/definitions');
 
 //CRUD Resource
 router.get('/bycat/:id', checkLevel, async (req, res) => {
@@ -21,6 +23,9 @@ router.get('/bycat/:id', checkLevel, async (req, res) => {
 router.get('/adminCat/:id', userCheck, checkAdmin, async (req, res) => {
     const idCategory = req.params.id;
     const result = await resource.findAllByCategoryAdmin(idCategory);
+    if(result&&(typeof(result.errnno)!=='undefined')){
+        return res.sendStatus(500);
+    }
     if (result) {
         return res.status(200).json(result);
     }
@@ -32,10 +37,13 @@ router.get('/adminCat/:id', userCheck, checkAdmin, async (req, res) => {
 router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
     const docId = req.params.id;
     const result = await resource.findOneAdmin(docId);
+    if(result&&(typeof(result.errnno)!=='undefined')){
+        return res.sendStatus(500);
+    }
     if (result && result.length > 0) {
         //Get all themes and check if theme is in theme
         const themeList = await theme.getAll();
-        if(themeList.errno){
+        if(themeList&&(typeof(themeList.errnno)!=='undefined')){
             return res.sendStatus(500);
         }
         const name = result[0].name;
@@ -88,7 +96,10 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     //Change if needed idDoc,name and visibility
 
     //Delete all links in  theme_to_ressource
-    //const result=await theme.destroyByResource(req.params.id);
+    /*const result=await theme.destroyByResource(req.params.id);
+    if(result&&(typeof(result.errnno)!=='undefined')){
+        return res.sendStatus(500);
+    }*/
     //add all checked in theme_to_resource
     console.log(req.body);
     return res.sendStatus(200);
@@ -96,6 +107,9 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
 router.delete('/:id', userCheck, checkAdmin, async (req, res) => {
     //Remove all link in theme_to_resource where ID
     const result=await theme.destroyByResource(req.params.id);
+    if(result&&(typeof(result.errnno)!=='undefined')){
+        return res.sendStatus(500);
+    }
     //Remove resource
     const destroyResult=await resource.destroy(req.params.id);
     if(destroyResult>0){

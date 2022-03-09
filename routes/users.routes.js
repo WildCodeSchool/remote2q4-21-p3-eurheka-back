@@ -28,14 +28,14 @@ router.post('/', async (req, res) => {
     else {
         //check if user already exists
         const existUser = await Users.findOneByMail(email);
-        if(existUser.errno){
+        if(existUser&&(typeof(existUser.errno)!=='undefined')){
             return res.sendStatus(500);
         }
         if (existUser) {
             return res.status(409).json({ message: 'This email is already used' });
         }
         const newId = await Users.create(payload);
-        if(newId.errno){
+        if(newId&&(typeof(newId.errno)!=='undefined')){
             return res.sendStatus(500);
         }
         return res.status(201).json({ userId: newId });
@@ -49,7 +49,7 @@ router.post('/login/', async (req, res) => {
     }
     //Check if user exists
     const userExist = await Users.findOneByMailForLogin(req.body.email);
-    if(userExist.errno){
+    if(userExist&&(typeof(userExist.errno)=='undefined')){
         return res.sendStatus(500);
     }
     if (!userExist) {
@@ -57,7 +57,7 @@ router.post('/login/', async (req, res) => {
     }
     //CheckPassword
     const userOK = await Users.checkPassword(req.body.password, userExist.password);
-    if(userOK.errno){
+    if(userOK&&(typeof(userOK.errno)!=='undefined')){
         return res.sendStatus(500);
     }
     if (!userOK) {
