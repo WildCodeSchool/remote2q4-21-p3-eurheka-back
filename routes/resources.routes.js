@@ -93,8 +93,17 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     name
     visibility
     themes[{idTheme,checked themeName}]*/
-    //Change if needed idDoc,name and visibility
-
+    const {name,visibility,themes}=req.body;
+    const payload={name,visibility};
+    const errors=theme.validate(payload);
+    if(errors){
+        const errorDetails = errors.details;
+        const errorArray = [];
+        errorDetails.forEach((error) => {
+            errorArray.push(error.message);
+        });
+        return res.status(422).json(errorArray);
+    }
     //Delete all links in  theme_to_ressource
     /*const result=await theme.destroyByResource(req.params.id);
     if(result&&(typeof(result.errnno)!=='undefined')){
