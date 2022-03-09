@@ -17,23 +17,21 @@ router.get('/bycat/:id', checkLevel, async (req, res) => {
         return res.sendStatus(500);
     }
 });
+
 router.get('/adminCat/:id', userCheck, checkAdmin, async (req, res) => {
-    //Check user connection and level
     const idCategory = req.params.id;
-    //Get information from model
     const result = await resource.findAllByCategoryAdmin(idCategory);
     if (result) {
-        //Send result
         return res.status(200).json(result);
     }
     else {
         return res.sendStatus(500);
     }
 });
+
 router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
     const docId = req.params.id;
     const result = await resource.findOneAdmin(docId);
-    console.log(result);
     if (result && result.length > 0) {
         //Get all themes and check if theme is in theme
         const themeList = await theme.getAll();
@@ -70,8 +68,10 @@ router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
     else
         return res.status(200).json([]);
 });
+
 router.get('/:id', (req, res) => {
     return res.status(404).send('A completer');
+    
 });
 router.post('/', (req, res) => {
     return res.sendStatus(404);
@@ -85,10 +85,10 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     //Change if needed idDoc,name and visibility
 
     //Delete all links in  theme_to_ressource
-    const result=await theme.destroyByResource(req.params.id);
+    //const result=await theme.destroyByResource(req.params.id);
     //add all checked in theme_to_resource
-
-    return res.sendStatus(404);
+    console.log(req.body);
+    return res.sendStatus(200);
 });
 router.delete('/:id', userCheck, checkAdmin, async (req, res) => {
     //Remove all link in theme_to_resource where ID
