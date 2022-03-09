@@ -1,8 +1,13 @@
 const router = require("express").Router();
 const cv = require('../models/cvs.model');
+const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidation');
 
-router.get('/', (req, res) => {
-
+router.get('/', userCheck, checkAdmin, (req, res) => {
+    cv.findAll()
+        .then((result) => {
+            res.status(200).json(result);
+        })
+    //add error control
 });
 router.get('/:id', (req, res) => {
 
