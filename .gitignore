@@ -4,3 +4,4 @@ node_modules/
 .env
 users.routes_old.js
 routes/users.routes_old.js
+test.js
