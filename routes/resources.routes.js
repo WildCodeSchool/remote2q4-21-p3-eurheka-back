@@ -5,30 +5,53 @@ const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidat
 const theme = require('../models/themes.model');
 const { resourceCategory } = require('../utils/definitions');
 
-const storageJob=multer.diskStorage(
+const storageJob = multer.diskStorage(
     {
-        destination: function (req,file,cb){
-            cb(null,'uploads/jobs')
+        destination: function (req, file, cb) {
+            cb(null, 'uploads/jobs')
         },
-        filename:function (req,file,cb){
-            cb(null,file.originalname)
+        filename: function (req, file, cb) {
+            cb(null, file.originalname)
+        }
+    }
+);
+const addResourceToDb = async (payload) => {
+    const errors = resource.validate(payload);
+    if (errors) {
+        const errorDetails = errors.details;
+        const errorArray = [];
+        errorDetails.forEach((error) => {
+            errorArray.push(error.message);
+        });
+        return { error: 422, errors: errorArray };
+    }
+    //Envoi à la BDD
+    const result = await resource.create(payload);
+
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return { error: 500 };
+    }
+    if (result) {
+        return { error: 0, newId: result };
+    }
+    else {
+        return { error: 500 };
+    }
+}
+
+const storageDoc = multer.diskStorage(
+    {
+        destination: function (req, file, cb) {
+            cb(null, 'uploads/docs')
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname)
         }
     }
 );
 
-const storageDoc=multer.diskStorage(
-    {
-        destination: function (req,file,cb){
-            cb(null,'uploads/docs')
-        },
-        filename:function (req,file,cb){
-            cb(null,file.originalname)
-        }
-    }
-);
-
-const uploadJob=multer({storage:storageJob});
-const uploadDoc=multer({storage:storageDoc});
+const uploadJob = multer({ storage: storageJob });
+const uploadDoc = multer({ storage: storageDoc });
 
 //CRUD Resource
 router.get('/bycat/:id', checkLevel, async (req, res) => {
@@ -110,24 +133,65 @@ router.get('/:id', (req, res) => {
 
 });
 
-router.post('/job/',uploadJob.single('file'),async(req, res) => {
-   /* console.log(req.body);
-    console.log(req.file);*/
-
-    return res.sendStatus(402);
+router.post('/job/', uploadJob.single('file'), async (req, res) => {
+    //Needed for model 
+    const path = req.file.path;
+    const visibility = req.body.visibility;
+    const id_cat = req.body.id_cat;
+    const name = req.body.name;
+    const payload = { path, visibility, id_cat, name };
+    const addedDb = await addResourceToDb(payload);
+    const error = addedDb.error;
+    if (error === 0) {
+        const newDocId = addedDb.newId;
+        console.log(newDocId);
+    }
+    else {
+        if (error === 422) {
+            return res.status(error).json(addedDb.errors)
+        }
+        return res.sendStatus(error);
+    }
 });
-router.post('/doc/',uploadDoc.single('file'), async(req, res) => {
-    /* console.log(req.body);
-     console.log(req.file);*/
- 
-     return res.sendStatus(403);
- });
- router.post('/video/', async(req, res) => {
-    /* console.log(req.body);
-     console.log(req.file);*/
- 
-     return res.sendStatus(401);
- });
+
+router.post('/doc/', uploadDoc.single('file'), async (req, res) => {
+    const path = req.file.path;
+    const visibility = req.body.visibility;
+    const id_cat = req.body.id_cat;
+    const name = req.body.name;
+    const payload = { path, visibility, id_cat, name };
+    const addedDb = await addResourceToDb(payload);
+    const error = addedDb.error;
+    if (error === 0) {
+        const newDocId = addedDb.newId;
+        console.log(newDocId);
+    }
+    else {
+        if (error === 422) {
+            return res.status(error).json(addedDb.errors)
+        }
+        return res.sendStatus(error);
+    }
+});
+
+router.post('/video/', uploadDoc.single('file'), async (req, res) => {
+    //Needed for model 
+    const path = req.body.video;
+    const visibility = req.body.visibility;
+    const id_cat = req.body.id_cat;
+    const name = req.body.name;
+    const payload = { path, visibility, id_cat, name };
+    if (error === 0) {
+        const newDocId = addedDb.newId;
+        console.log(newDocId);
+    }
+    else {
+        if (error === 422) {
+            return res.status(error).json(addedDb.errors)
+        }
+        return res.sendStatus(error);
+    }
+});
 router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     const returnArray = [];
     //check if resource exists
@@ -178,13 +242,13 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
                 }
                 //Adding new themes to resource
                 try {
-                    themes.forEach(async(themeItem) => {
+                    themes.forEach(async (themeItem) => {
                         let idTheme = themeItem.idTheme;
-                        let result=await theme.add_RessourceTheme(req.params.id,idTheme);
-                        if(result&&(typeof(result.errno)!=='undefined')){
+                        let result = await theme.add_RessourceTheme(req.params.id, idTheme);
+                        if (result && (typeof (result.errno) !== 'undefined')) {
                             throw 'break';
                         }
-                        if(result){
+                        if (result) {
                             returnArray.push(`adding theme ${idTheme} to resource ${req.params.id}`);
                         }
                     })
