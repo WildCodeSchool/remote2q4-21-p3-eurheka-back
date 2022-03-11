@@ -14,6 +14,11 @@ const userInscriptionOptions = {
     FOCUS: 4
 }
 
+const resourceCategory ={
+    VIDEO:1,
+    DOC:2,
+    JOB:3
+}
 //expiration token and cookie
 const maxAge = 1000 * 60 * 60 //1 hour
 
@@ -21,4 +26,5 @@ module.exports = {
     userRole,
     userInscriptionOptions,
     maxAge,
+    resourceCategory,
 }

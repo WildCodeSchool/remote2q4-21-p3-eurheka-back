@@ -36,13 +36,21 @@ const hashPassword = (plainPassword) => {
 const findOneByMail = (email) => {
     return db
         .query("SELECT id_users FROM users WHERE email=?", [email])
-        .then(([result]) => result[0]);
+        .then(([result]) => result[0])
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
 }
 
 const findOneByMailForLogin = (email) => {
     return db
         .query("SELECT id_users,password,user_level FROM users WHERE email=?", [email])
-        .then(([result]) => result[0]);
+        .then(([result]) => result[0])
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
 }
 
 const create = async ({ firstname, lastname, password, email, options }) => {
