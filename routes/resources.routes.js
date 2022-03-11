@@ -5,6 +5,31 @@ const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidat
 const theme = require('../models/themes.model');
 const { resourceCategory } = require('../utils/definitions');
 
+const storageJob=multer.diskStorage(
+    {
+        destination: function (req,file,cb){
+            cb(null,'uploads/jobs')
+        },
+        filename:function (req,file,cb){
+            cb(null,file.originalname)
+        }
+    }
+);
+
+const storageDoc=multer.diskStorage(
+    {
+        destination: function (req,file,cb){
+            cb(null,'uploads/docs')
+        },
+        filename:function (req,file,cb){
+            cb(null,file.originalname)
+        }
+    }
+);
+
+const uploadJob=multer({storage:storageJob});
+const uploadDoc=multer({storage:storageDoc});
+
 //CRUD Resource
 router.get('/bycat/:id', checkLevel, async (req, res) => {
     //Check user connection and level
@@ -85,11 +110,24 @@ router.get('/:id', (req, res) => {
 
 });
 
-router.post('/', (req, res) => {
-    console.log(req.body);
-    return res.sendStatus(404);
-});
+router.post('/job/',uploadJob.single('file'),async(req, res) => {
+   /* console.log(req.body);
+    console.log(req.file);*/
 
+    return res.sendStatus(402);
+});
+router.post('/doc/',uploadDoc.single('file'), async(req, res) => {
+    /* console.log(req.body);
+     console.log(req.file);*/
+ 
+     return res.sendStatus(403);
+ });
+ router.post('/video/', async(req, res) => {
+    /* console.log(req.body);
+     console.log(req.file);*/
+ 
+     return res.sendStatus(401);
+ });
 router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     const returnArray = [];
     //check if resource exists
