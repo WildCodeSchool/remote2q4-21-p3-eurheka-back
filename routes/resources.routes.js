@@ -39,6 +39,24 @@ const addResourceToDb = async (payload) => {
     }
 }
 
+const addThemeToResource=(themes,resourceId)=>{
+    try {
+        themes.forEach(async (themeItem) => {
+            if(themeItem.checked){
+                let idTheme = themeItem.idTheme;
+                let result = await theme.add_RessourceTheme(resourceId, idTheme);
+                if (result && (typeof (result.errno) !== 'undefined')) {
+                    throw 'break';
+                }
+            }
+        })
+        return {error:0}
+    }
+    catch (e) {
+        return {error:500};
+    }
+}
+
 const storageDoc = multer.diskStorage(
     {
         destination: function (req, file, cb) {
@@ -144,7 +162,10 @@ router.post('/job/', uploadJob.single('file'), async (req, res) => {
     const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        console.log(newDocId);
+        const themes=JSON.parse(req.body.themes);
+        const addTheme=addThemeToResource(themes,newDocId);
+        if(addTheme.error===0)
+            return res.sendStatus(201);
     }
     else {
         if (error === 422) {
@@ -164,7 +185,8 @@ router.post('/doc/', uploadDoc.single('file'), async (req, res) => {
     const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        console.log(newDocId);
+        const themes=JSON.parse(req.body.themes);
+        const addTheme=addThemeToResource(themes,newDocId);
     }
     else {
         if (error === 422) {
@@ -181,9 +203,12 @@ router.post('/video/', uploadDoc.single('file'), async (req, res) => {
     const id_cat = req.body.id_cat;
     const name = req.body.name;
     const payload = { path, visibility, id_cat, name };
+    const addedDb = await addResourceToDb(payload);
+    const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        console.log(newDocId);
+        const themes=req.body.themes;
+        const addTheme=addThemeToResource(themes,newDocId);
     }
     else {
         if (error === 422) {
