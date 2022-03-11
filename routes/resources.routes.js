@@ -166,6 +166,8 @@ router.post('/job/', uploadJob.single('file'), async (req, res) => {
         const addTheme=addThemeToResource(themes,newDocId);
         if(addTheme.error===0)
             return res.sendStatus(201);
+        else
+            return res.sendStatus(addTheme.error);
     }
     else {
         if (error === 422) {
@@ -187,6 +189,10 @@ router.post('/doc/', uploadDoc.single('file'), async (req, res) => {
         const newDocId = addedDb.newId;
         const themes=JSON.parse(req.body.themes);
         const addTheme=addThemeToResource(themes,newDocId);
+        if(addTheme.error===0)
+            return res.sendStatus(201);
+        else
+            return res.sendStatus(addTheme.error);
     }
     else {
         if (error === 422) {
@@ -209,6 +215,10 @@ router.post('/video/', uploadDoc.single('file'), async (req, res) => {
         const newDocId = addedDb.newId;
         const themes=req.body.themes;
         const addTheme=addThemeToResource(themes,newDocId);
+        if(addTheme.error===0)
+            return res.sendStatus(201);
+        else
+            return res.sendStatus(addTheme.error);
     }
     else {
         if (error === 422) {
