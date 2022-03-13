@@ -49,9 +49,8 @@ router.post('/login/', async (req, res) => {
     }
     //Check if user exists
     const userExist = await Users.findOneByMailForLogin(req.body.email);
-
     if(userExist&&(typeof(userExist.errno)!=='undefined')){
-        return res.status(500).send('step 1');
+        return res.sendStatus(500);
     }
     if (!userExist) {
         return res.status(404).send('User not found');

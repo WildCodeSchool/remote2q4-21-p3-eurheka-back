@@ -8,7 +8,8 @@ const validate = (data, forCreation = true) => {
     return Joi.object({
         visibility: Joi.number().integer().presence(presence),
         name: Joi.string().max(255).presence(presence),
-        id_cat:Joi.number().integer().presence(presence)
+        id_cat:Joi.number().integer().presence(presence),
+        path: Joi.string().max(255).presence(presence)
     }).validate(data, { abortEarly: false }).error;
 }
 
@@ -101,6 +102,18 @@ const destroy=(id)=>{
         });
 }
 
+const create=({visibility,name,id_cat,path})=>{
+    return db
+        .query("INSERT INTO resource (id_cat,name,path,visibility) VALUES (?,?,?,?)",[id_cat,name,path,visibility])
+        .then(([result])=>{
+            return result.insertId;
+        })
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
+}
+
 module.exports = {
     findAllByCategory,
     findAllByCategoryAdmin,
@@ -110,4 +123,5 @@ module.exports = {
     validateTheme,
     findOne,
     update,
+    create
 }
