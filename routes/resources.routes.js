@@ -151,7 +151,7 @@ router.get('/:id', (req, res) => {
 
 });
 
-router.post('/job/', uploadJob.single('file'), async (req, res) => {
+router.post('/job/',userCheck, checkAdmin , uploadJob.single('file'), async (req, res) => {
     //Needed for model 
     const path = req.file.path;
     const visibility = req.body.visibility;
@@ -177,7 +177,7 @@ router.post('/job/', uploadJob.single('file'), async (req, res) => {
     }
 });
 
-router.post('/doc/', uploadDoc.single('file'), async (req, res) => {
+router.post('/doc/',userCheck, checkAdmin ,uploadDoc.single('file'), async (req, res) => {
     const path = req.file.path;
     const visibility = req.body.visibility;
     const id_cat = req.body.id_cat;
@@ -202,7 +202,7 @@ router.post('/doc/', uploadDoc.single('file'), async (req, res) => {
     }
 });
 
-router.post('/video/', uploadDoc.single('file'), async (req, res) => {
+router.post('/video/',userCheck, checkAdmin , uploadDoc.single('file'), async (req, res) => {
     //Needed for model 
     const path = req.body.video;
     const visibility = req.body.visibility;
