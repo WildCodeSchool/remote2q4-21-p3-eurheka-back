@@ -3,6 +3,7 @@ const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
 const { userInscriptionOptions, maxAge } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
+const {userCheck,checkSuperAdmin}=require('../middleware/UserValidation');
 
 router.post('/', async (req, res) => {
     const { firstname, lastname, password, email, stage, focus, accompanied } = req.body;
@@ -80,6 +81,14 @@ router.get('/logout/', (req, res) => {
     res.redirect('/');
     
 });
+router.get('/admin/',userCheck,checkSuperAdmin,async (req,res)=>{
+    const userList=await Users.findAll();
+    if(userList&&(typeof(userList.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(userList);
+});
+
 router.get('/', (req, res) => {
     res.sendStatus(404);
 });

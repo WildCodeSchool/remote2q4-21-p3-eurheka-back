@@ -72,6 +72,18 @@ const checkPassword = (plainPassword, hashedPassword) => {
     return argon2.verify(hashedPassword, plainPassword, hashingOptions);
 }
 
+const findAll=()=>{
+    return db
+        .query("SELECT id_users,userName, user_level, name FROM view_user_admin ORDER BY userName")
+        .then(([result])=>{
+            return result
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
 
 module.exports = {
     validate,
@@ -81,5 +93,5 @@ module.exports = {
     validateLogin,
     findOneByMailForLogin,
     checkPassword,
-
+    findAll,
 }
