@@ -42,6 +42,7 @@ router.post('/', async (req, res) => {
         return res.status(201).json({ userId: newId });
     }
 });
+
 router.post('/login/', async (req, res) => {
     //Check if email et pass are corrects
     const errors = Users.validateLogin(req.body);
@@ -81,6 +82,7 @@ router.get('/logout/', (req, res) => {
     res.redirect('/');
 
 });
+
 router.get('/admin/', userCheck, checkSuperAdmin, async (req, res) => {
     const userList = await Users.findAll();
     if (userList && (typeof (userList.errno) !== 'undefined')) {
@@ -92,25 +94,52 @@ router.get('/admin/', userCheck, checkSuperAdmin, async (req, res) => {
 router.get('/', (req, res) => {
     res.sendStatus(404);
 });
+
 router.get('/:id', (req, res) => {
     res.sendStatus(404);
 });
-router.put('/:id', (req, res) => {
-    res.sendStatus(404);
+
+router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
+    const user = await Users.findOneById(req.params.id);
+    if (user && (typeof (user.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    if (user) {
+        const { user_level } = req.body;
+        const errors = Users.validateLevel({ user_level });
+        if (errors) {
+            const errorDetails = errors.details;
+            const errorArray = [];
+            errorDetails.forEach((error) => {
+                errorArray.push(error.message);
+            });
+
+            return res.status(422).json(errorArray);
+        }
+        const result = await Users.updateLevelUser(req.params.id, user_level);
+        if (result && (typeof (result.errno) !== 'undefined')) {
+            return res.sendStatus(500);
+        }
+        return res.sendStatus(204);
+    }
+    else {
+        return res.sendStatus(404);
+    }
 });
-router.delete('/:id', userCheck, checkSuperAdmin, async(req, res) => {
-    const result=await Users.destroy(req.params.id);
+
+router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
+    const result = await Users.destroy(req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
-        if(result.errno===1451){
-            return res.status(500).send("Suppresion impossible, l'utilisateur a encore des dépendances");
+        if (result.errno === 1451) {
+            return res.status(500).json({ error: 1451, message: "Suppresion impossible, l'utilisateur a encore des dépendances" });
         }
         else
             return res.sendStatus(500);
     }
-    if(result){
+    if (result) {
         return res.sendStatus(204);
     }
-    else{
+    else {
         return res.sendStatus(404);
     }
 });

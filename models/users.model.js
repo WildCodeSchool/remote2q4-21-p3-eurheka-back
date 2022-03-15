@@ -22,6 +22,12 @@ const validate = (data, forCreation = true) => {
     }).validate(data, { abortEarly: false }).error;
 }
 
+const validateLevel=(data)=>{
+    return Joi.object({
+       user_level: Joi.number().integer().min(2).max(5).presence('required')
+    }).validate(data, { abortEarly: false }).error;
+}
+
 const validateLogin = (data) => {
     return Joi.object({
         email: Joi.string().email().max(255).presence('required'),
@@ -43,6 +49,15 @@ const findOneByMail = (email) => {
         })
 }
 
+const findOneById = (id) => {
+    return db
+        .query("SELECT id_users FROM users WHERE id_users=?", [id])
+        .then(([result]) => result[0])
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
 const findOneByMailForLogin = (email) => {
     return db
         .query("SELECT id_users,password,user_level FROM users WHERE email=?", [email])
@@ -96,6 +111,17 @@ const destroy=(idUser)=>{
         })
 }
 
+const updateLevelUser=(id,level)=>{
+    return db
+        .query("UPDATE users SET user_level=? WHERE id_users=?",[level,id])
+        .then(([result])=>{
+            return result.affectedRows!==0
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
 module.exports = {
     validate,
     hashPassword,
@@ -106,4 +132,7 @@ module.exports = {
     checkPassword,
     findAll,
     destroy,
+    updateLevelUser,
+    findOneById,
+    validateLevel,
 }
