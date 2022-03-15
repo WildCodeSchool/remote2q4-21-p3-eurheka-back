@@ -84,6 +84,17 @@ const findAll=()=>{
         })
 }
 
+const destroy=(idUser)=>{
+    return db
+        .query("DELETE FROM users WHERE id_users=?",[idUser])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
 
 module.exports = {
     validate,
@@ -94,4 +105,5 @@ module.exports = {
     findOneByMailForLogin,
     checkPassword,
     findAll,
+    destroy,
 }
