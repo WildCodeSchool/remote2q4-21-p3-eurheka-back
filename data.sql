@@ -493,6 +493,11 @@ CREATE VIEW `view_event_user` AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` 
 DROP VIEW IF EXISTS `view_resource_theme`;
 CREATE VIEW `view_resource_theme`  AS SELECT `r`.`id_resource` AS `id_resource`, `r`.`id_cat` AS `id_cat`, `r`.`name` AS `name`, `r`.`path` AS `path`, `r`.`visibility` AS `visibility`, `tt`.`id_theme` AS `id_theme`, `tt`.`id_ressource` AS `id_ressource`, `theme`.`name` AS `themename`, `resource_category`.`name_resource_category` AS `name_resource_category` FROM (((`resource` `r` left join `theme_to_ressources` `tt` on((`tt`.`id_ressource` = `r`.`id_resource`))) left join `theme` on((`theme`.`id_theme` = `tt`.`id_theme`))) join `resource_category` on((`r`.`id_cat` = `resource_category`.`id_resource_category`))) ORDER BY `r`.`id_resource` ASC  ;
 
+DROP VIEW IF EXISTS `view_user_admin`;
+CREATE
+ VIEW `view_user_admin`
+ AS SELECT u.`id_users`, concat(u.`lastname`,' ',u.`firstname`) as userName, u.`user_level`,u.id_enterprise,e.name FROM `users` u left join enterprise e
+on u.id_enterprise=e.id_enterprise;
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),
