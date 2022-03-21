@@ -1,11 +1,27 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
-const { userCheck } = require('../middleware/UserValidation');
+const { userCheck,checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Event
-// router.get('/', (req, res) => {
-//   return res.sendStatus(402);
-// });
+router.get('/admin',userCheck,checkAdmin,async(req,res)=>{
+  const result=await event.findAllForAdmin();
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  const now=new Date(Date.now());
+  const eventToSend=[];
+  if (result){
+    result.forEach((event)=>{
+      const eventDate=new Date(event.date_event);
+      let isPassed=false;
+      if(eventDate<now)
+        isPassed=true;
+      eventToSend.push({...event,isPassed});
+    })
+  }
+  return res.status(200).json(eventToSend);
+} );
+
 router.get('/myevents/', userCheck, (req, res) => {
   userId = req.userData.user_id;
   event.findAllRelatedToUser(userId)
@@ -39,8 +55,13 @@ router.get('/category/:id', async (req, res) => {
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
-  return res.status(200).json(result);
+  if (result){
+    return res.status(200).json(result);
+  }
+  else
+    return res.status(404).send('Category not found');
 });
+
 
 
 router.get('/:id', userCheck, (req, res) => {
@@ -98,8 +119,24 @@ router.put('/:id', (req, res) => {
   return res.sendStatus(402);
 });
 
-router.delete('/:id', (req, res) => {
-  return res.sendStatus(402);
+router.delete('/:id',async (req, res) => {
+  //Remove Dependancies
+  const removedDependancies=await event.removeDependancies(req.params.id);
+  if (removedDependancies && (typeof (removedDependancies.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  if(removedDependancies){
+    const result=event.deleteEvent(req.params.id);
+    if (result && (typeof (result.errno) !== 'undefined')) {
+      return res.sendStatus(500);
+    }
+    if (result){
+      return  res.sendStatus(200);
+    }
+    else
+      return res.sendStatus(404);
+  }
+  
 });
 
 //CUD Event Category
@@ -144,7 +181,7 @@ router.put('/category/:id', async (req, res) => {
     return res.sendStatus(204);
   }
   else {
-    return res.sendStatus(200);
+    return res.sendStatus(404);
   }
 });
 
@@ -157,7 +194,7 @@ router.delete('/category/:id', async (req, res) => {
     return res.sendStatus(204);
   }
   else {
-    return res.sendStatus(200);
+    return res.sendStatus(404);
   }
 });
 module.exports = router;

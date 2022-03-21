@@ -38,6 +38,14 @@ const findAllByCategory=(category) =>{
         });
 }
 
+const findAllForAdmin=()=>{
+    return db
+        .query("SELECT e.id_event,e.name,e.date_event,c.category_name FROM event e INNER JOIN category_events c ON e.id_cat=c.id_category WHERE id_cat!=1 ORDER BY e.date_event DESC")
+        .then(([result])=>{
+            return result;
+        })
+}
+
 const findAllRelatedToUser= (userId) => {
     return db
         .query("SELECT * FROM view_event_user WHERE id_users = ?", [userId])
@@ -133,6 +141,30 @@ const deleteCategory=(id)=>{
         })
 }
 
+const deleteEvent=(id)=>{
+    return db
+        .query("DELETE FROM event WHERE id_event=?",[id])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
+const removeDependancies=(id)=>{
+    return db
+        .query("DELETE FROM event_to_user WHERE id_event=?",[id])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -145,5 +177,8 @@ module.exports = {
     validateCategory,
     addCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    findAllForAdmin,
+    deleteEvent,
+    removeDependancies
 }
