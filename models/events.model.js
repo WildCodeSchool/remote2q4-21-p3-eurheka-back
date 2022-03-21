@@ -12,6 +12,14 @@ const validate = (data, forCreation = true) => {
     }).validate(data, { abortEarly: false }).error;
   };
 
+const validateCategory=(data, forCreation = true) => {
+    const presence = forCreation ? 'required' : 'optional';
+    return Joi.object({
+      category_name: Joi.string().min(1).max(200).presence(presence),
+    }).validate(data, { abortEarly: false }).error;
+  };
+
+
 const findOne = (id) => {
     return db
       .query('SELECT * FROM event WHERE id_event = ?', [id])
@@ -65,11 +73,77 @@ const associateWithUser = (idEvent, idUser) => {
         })
 }
 
+const getAllCat=()=>{
+    return db
+        .query("SELECT id_category, category_name FROM category_events ORDER BY category_name")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
+const getOneCat=(id)=>{
+    return db
+        .query("SELECT id_category, category_name FROM category_events WHERE id_category=? ORDER BY category_name",[id])
+        .then(([result])=>{
+            return result[0];
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
+const addCategory=({category_name})=>{
+    return db
+        .query("INSERT INTO category_events (category_name) VALUES(?)",[category_name])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
+const updateCategory=({category_name},id)=>{
+    return db
+        .query("UPDATE category_events SET category_name=? WHERE id_category=?",[category_name,id])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
+const deleteCategory=(id)=>{
+    return db
+        .query("DELETE FROM category_events WHERE id_category= ?",[id])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
 module.exports = {
     validate,
     findAllByCategory,
     findOne, 
     create,
     associateWithUser,
-    findAllRelatedToUser
+    findAllRelatedToUser,
+    getAllCat,
+    getOneCat,
+    validateCategory,
+    addCategory,
+    updateCategory,
+    deleteCategory
 }
