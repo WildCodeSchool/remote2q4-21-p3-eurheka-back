@@ -521,3 +521,6 @@ INSERT INTO `resource_category` (`id_resource_category`, `name_resource_category
 (1, 'Vidéo'),
 (2, 'Documents à télécharger'),
 (3,'Fiches métiers');
+
+INSERT INTO `category_events` (`category_name`) VALUES
+(1,'RDV');
