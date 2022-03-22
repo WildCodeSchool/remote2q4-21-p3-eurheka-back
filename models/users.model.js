@@ -60,7 +60,7 @@ const findOneById = (id) => {
 }
 const findOneByMailForLogin = (email) => {
     return db
-        .query("SELECT id_users,password,user_level FROM users WHERE email=?", [email])
+        .query("SELECT id_users,password,user_level,firstname,lastname FROM users WHERE email=?", [email])
         .then(([result]) => result[0])
         .catch((err)=>{
             console.log(err);
