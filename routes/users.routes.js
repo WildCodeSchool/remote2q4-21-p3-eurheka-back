@@ -67,7 +67,6 @@ router.post('/login/', async (req, res) => {
     }
     //create token
     try {
-        
         const token = calculateToken(userExist.id_users, userExist.user_level,userExist.firstname,userExist.lastname ,maxAge);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
         return res.status(200).json({ userId: userExist.id_users,firstname:userExist.firstname,lastname:userExist.lastname });
