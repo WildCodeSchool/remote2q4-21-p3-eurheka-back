@@ -6,7 +6,7 @@ const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidat
 router.get('/bycat/:id', checkLevel, async (req, res) => {
     //Check user connection and level
     const userLevel = req.userData.user_level;
-    const idCategory = req.params.id;
+    const idCategory = 3;
     //Get information from model
     const result = await resource.findAllByCategory(userLevel, idCategory);
     if (result) {

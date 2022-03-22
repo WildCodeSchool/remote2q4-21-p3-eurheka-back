@@ -9,6 +9,7 @@ const findOneAdmin = (id) => {
         .then(([result])=>{return result})
 }
 
+
 const findAllByCategory = (level, category) => {
     const sqlArray = [];
     let sql="";
