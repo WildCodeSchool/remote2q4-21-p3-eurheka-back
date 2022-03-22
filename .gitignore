@@ -5,3 +5,4 @@ node_modules/
 users.routes_old.js
 routes/users.routes_old.js
 test.js
+uploads/
