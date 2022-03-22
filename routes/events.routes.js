@@ -159,6 +159,10 @@ router.post('/category/', async (req, res) => {
 });
 
 router.put('/category/:id', async (req, res) => {
+  const id_event=parseInt(req.params.id);
+  if(id_event===1){
+    return res.status(403).send('Event non updatable');
+  }
   const errors = event.validateCategory(req.body, false);
   if (errors) {
     const errorDetails = errors.details;
@@ -203,6 +207,10 @@ router.put('/rdv/:id',userCheck,async(req,res)=>{
 });
 
 router.delete('/category/:id', async (req, res) => {
+  const id_event=parseInt(req.params.id);
+  if(id_event===1){
+    return res.status(403).send('Event non removable');
+  }
   const result = await event.deleteCategory(req.params.id);
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
