@@ -144,12 +144,7 @@ router.delete('/:id',async (req, res) => {
 router.post('/category/', async (req, res) => {
   const errors = event.validateCategory(req.body);
   if (errors) {
-    const errorDetails = errors.details;
-    const errorArray = [];
-    errorDetails.forEach((error) => {
-      errorArray.push(error.message);
-    });
-    return res.status(422).json(errorArray);
+    cccc
   }
   const result = await event.addCategory(req.body);
   if (result && (typeof (result.errno) !== 'undefined')) {
@@ -183,6 +178,28 @@ router.put('/category/:id', async (req, res) => {
   else {
     return res.sendStatus(404);
   }
+});
+
+router.put('/rdv/:id',userCheck,async(req,res)=>{
+   const errors=event.validateRDV(req.body);
+   const userId=req.userData.user_id;
+   if(errors){
+    const errorDetails = errors.details;
+    const errorArray = [];
+    errorDetails.forEach((error) => {
+      errorArray.push(error.message);
+    });
+    return res.status(422).json(errorArray);
+   }
+  const result=await event.updateRDV(req.body,req.params.id,userId);
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  if(result){
+    return res.status(200).json({id:req.params.id,userId,...req.body});
+  }
+  else
+    return res.sendStatus(404);
 });
 
 router.delete('/category/:id', async (req, res) => {
