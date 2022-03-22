@@ -44,7 +44,7 @@ const findOneAdmin = (id) => {
 }
 
 const findAllByCategory = (level, category) => {
-    const sqlArray = [];
+    const sqlArray = [category];
     let sql="";
     if (level >= userRole.ADMIN) {
         sql = "SELECT id_resource, id_cat, name, path FROM resource WHERE id_cat=?";
