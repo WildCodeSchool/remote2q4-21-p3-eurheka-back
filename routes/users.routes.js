@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
-const { userInscriptionOptions, maxAge } = require('../utils/definitions');
+const { userInscriptionOptions, maxAge, userRole } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
 const { userCheck, checkSuperAdmin } = require('../middleware/UserValidation');
 
@@ -95,8 +95,25 @@ router.get('/', (req, res) => {
     res.sendStatus(404);
 });
 
-router.get('/:id', (req, res) => {
-    res.sendStatus(404);
+router.get('/:id', userCheck, async (req, res) => {
+    const idUser = req.userData.user_id;
+    console.log(idUser);
+    const levelUser = req.userData.user_level;
+    if ((idUser === parseInt(req.params.id))||(levelUser === userRole.SUPER_ADMIN)) {
+        const result = await Users.getDetailById(req.params.id);
+        if (result && (typeof (result.errno) !== 'undefined')) {
+            return res.sendStatus(500);
+        }
+        if (result) {
+            return res.status(200).json(result);
+        }
+        else {
+            return res.status(404).send("User not found");
+        }
+    } 
+    else {
+        return res.sendStatus(403);
+    }    
 });
 
 router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
