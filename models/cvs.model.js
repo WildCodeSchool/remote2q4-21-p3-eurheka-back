@@ -13,6 +13,16 @@ const findAll = () => {
         });
 }
 
+const findOne = (id) => {
+    return db
+    .query("SELECT * FROM cv WHERE id_cv=?", [id])
+    .then(([result]) => {
+        return result[0]
+    })
+    .catch((err) => console.error(err));
+}
+
 module.exports = {
-    findAll
+    findAll,
+    findOne
 }
