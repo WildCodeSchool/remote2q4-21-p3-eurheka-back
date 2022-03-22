@@ -44,3 +44,5 @@ INSERT INTO `opinion` (`id_opinion`, `id_user`, `opinion`, `id_enterprise`, `is_
 (6, 10, 'Expérience parfaite', 2, 1),
 (7, 8, 'A refaire', 2, 0),
 (8, 7, 'A refaire', 2, 0);
+
+ALTER TABLE `event_to_user`  ADD `is_valid` BOOLEAN NOT NULL DEFAULT FALSE  AFTER `is_owner`;

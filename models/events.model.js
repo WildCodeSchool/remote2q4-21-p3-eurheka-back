@@ -8,9 +8,15 @@ const validate = (data, forCreation = true) => {
     return Joi.object({
       category: Joi.number().integer().presence(presence),
       name: Joi.string().max(200).presence(presence),
-      date: Joi.string().isoDate().presence(presence),
+      date: Joi.string().isoDate().presence(presence)
     }).validate(data, { abortEarly: false }).error;
   };
+
+const validateRDV=(data)=>{
+    return Joi.object({
+        is_valid : Joi.boolean().presence('required')
+    }).validate(data, { abortEarly: false }).error;
+}
 
 const validateCategory=(data, forCreation = true) => {
     const presence = forCreation ? 'required' : 'optional';
@@ -165,6 +171,18 @@ const removeDependancies=(id)=>{
         })
 }
 
+const updateRDV=({is_valid},id,userId)=>{
+    return db
+        .query("UPDATE event_to_user SET is_valid=? WHERE (id_event=? AND id_user=?)",[is_valid,id,userId])
+        .then(([result])=>{
+            return result.affectedRows!==0
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -180,5 +198,7 @@ module.exports = {
     deleteCategory,
     findAllForAdmin,
     deleteEvent,
-    removeDependancies
+    removeDependancies,
+    validateRDV,
+    updateRDV
 }
