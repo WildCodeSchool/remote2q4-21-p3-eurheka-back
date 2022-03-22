@@ -3,6 +3,16 @@ const Joi = require('joi');
 
 const db = connection.promise();
 
+const validate = (data, forCreation = true) => {
+    const presence = forCreation ? 'required' : 'optional';
+    return Joi.object({
+        name: Joi.string().max(255).presence(presence),
+        address: Joi.string().max(255).presence(presence),
+        id_activity: Joi.number().integer().presence(presence),
+        nb_employes: Joi.number().integer().presence(presence),
+    }).validate(data, { abortEarly: false }).error;
+}
+
 const findOne = (id) => {
     return db
         .query("SELECT * FROM enterprise WHERE id_enterprise=?", [id])
@@ -23,4 +33,5 @@ const findOneByName = (EnterpriseName) => {
 module.exports = {
     findOne,
     findOneByName,
+    validate
 }
