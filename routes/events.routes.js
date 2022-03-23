@@ -3,6 +3,14 @@ const event = require('../models/events.model');
 const { userCheck,checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Event
+router.get('/',async(req,res)=>{
+  const result=await event.findAllWhithoutRDV();
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  return res.status(200).json(result);
+});
+
 router.get('/admin',userCheck,checkAdmin,async(req,res)=>{
   const result=await event.findAllForAdmin();
   if (result && (typeof (result.errno) !== 'undefined')) {

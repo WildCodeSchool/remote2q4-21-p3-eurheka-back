@@ -183,6 +183,18 @@ const updateRDV=({is_valid},id,userId)=>{
         })
 }
 
+const findAllWhithoutRDV=()=>{
+    return db
+        .query("SELECT id_event,name, date_event,category_name FROM view_event_display WHERE date_event>=now()")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}       
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -200,5 +212,6 @@ module.exports = {
     deleteEvent,
     removeDependancies,
     validateRDV,
-    updateRDV
+    updateRDV,
+    findAllWhithoutRDV
 }
