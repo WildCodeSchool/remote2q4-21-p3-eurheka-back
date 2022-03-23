@@ -185,7 +185,7 @@ const updateRDV=({is_valid},id,userId)=>{
 
 const findAllWhithoutRDV=()=>{
     return db
-        .query("SELECT id_event,name, date_event,category_name FROM view_event_display WHERE date_event>=now()")
+        .query("SELECT id_event,name, date_event,category_name FROM view_event_display WHERE date_event>=now() ORDER BY date_event desc")
         .then(([result])=>{
             return result;
         })
