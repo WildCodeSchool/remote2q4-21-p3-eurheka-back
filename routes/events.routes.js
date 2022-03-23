@@ -131,7 +131,7 @@ router.delete('/:id',async (req, res) => {
       return res.sendStatus(500);
     }
     if (result){
-      return  res.sendStatus(200);
+      return  res.sendStatus(204);
     }
     else
       return res.sendStatus(404);
