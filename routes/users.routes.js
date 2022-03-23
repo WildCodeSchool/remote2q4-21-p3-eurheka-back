@@ -146,7 +146,6 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
 router.put('/:id', userCheck, async (req, res) => {
     const errors = Users.validateUpdate(req.body);
     if (errors) {
-        console.log(errors);
         const errorDetails = errors.details;
         const errorArray = [];
         errorDetails.forEach((error) => {
