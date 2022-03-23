@@ -97,7 +97,6 @@ router.get('/', (req, res) => {
 
 router.get('/:id', userCheck, async (req, res) => {
     const idUser = req.userData.user_id;
-    console.log(idUser);
     const levelUser = req.userData.user_level;
     if ((idUser === parseInt(req.params.id))||(levelUser === userRole.SUPER_ADMIN)) {
         const result = await Users.getDetailById(req.params.id);
