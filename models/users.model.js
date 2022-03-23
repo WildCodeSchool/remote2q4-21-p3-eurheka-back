@@ -58,9 +58,20 @@ const findOneById = (id) => {
             return err;
         })
 }
+
+const getDetailById = (id) => {
+    return db
+    .query("SELECT id_users, firstname, lastname, email, phone, birthday, adresse, in_post, free_date, job_search, job_name, job_date, enterprise_name, signin_options FROM users WHERE id_users=?", [id])
+    .then(([result]) => result[0])
+    .catch((err) =>{
+        console.log(err);
+        return err;
+    })
+}
+
 const findOneByMailForLogin = (email) => {
     return db
-        .query("SELECT id_users,password,user_level FROM users WHERE email=?", [email])
+        .query("SELECT id_users,password,user_level,firstname,lastname FROM users WHERE email=?", [email])
         .then(([result]) => result[0])
         .catch((err)=>{
             console.log(err);
@@ -131,6 +142,7 @@ module.exports = {
     findOneByMailForLogin,
     checkPassword,
     findAll,
+    getDetailById,
     destroy,
     updateLevelUser,
     findOneById,
