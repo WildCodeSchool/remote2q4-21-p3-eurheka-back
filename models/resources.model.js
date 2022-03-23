@@ -52,7 +52,6 @@ const findAllByCategory = (level, category) => {
     }
     else {
         sql = "SELECT id_resource, id_cat, name, path FROM resource WHERE id_cat=? AND visibility=1";
-        const sqlArray = [];
         sqlArray.push(category);
         if (level > 1) {
             sql += " OR visibility=?";
