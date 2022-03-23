@@ -502,7 +502,7 @@ on u.id_enterprise=e.id_enterprise;
 
 DROP VIEW IF EXISTS `view_event_display`;
 CREATE VIEW `view_event_display`
- AS SELECT e.`id_event`, e.`id_cat`,`name`,e.`date_event`,c.category_name FROM `event` e INNER JOIN category_events c
+ AS SELECT e.`id_event`, e.`id_cat`,`name`,DATE_FORMAT(e.date_event,"%d/%m/%Y %H:%i") as date_eventFR,e.date_event,c.category_name FROM `event` e INNER JOIN category_events c
 ON e.id_cat=c.id_category WHERE e.id_cat!=1;
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES

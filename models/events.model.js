@@ -183,11 +183,11 @@ const updateRDV=({is_valid},id,userId)=>{
         })
 }
 
-const findAllWhithoutRDV=()=>{
+const findLastWhithoutRDV=()=>{
     return db
-        .query("SELECT id_event,name, date_event,category_name FROM view_event_display WHERE date_event>=now() ORDER BY date_event desc")
+        .query("SELECT id_event,name, date_eventFR,category_name FROM view_event_display WHERE date_event>=now() ORDER BY date_event asc")
         .then(([result])=>{
-            return result;
+            return result[0];
         })
         .catch((err) => {
             console.error(err);
@@ -213,5 +213,5 @@ module.exports = {
     removeDependancies,
     validateRDV,
     updateRDV,
-    findAllWhithoutRDV
+    findLastWhithoutRDV
 }
