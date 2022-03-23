@@ -22,6 +22,19 @@ const validate = (data, forCreation = true) => {
     }).validate(data, { abortEarly: false }).error;
 }
 
+const validateUpdate = (data, forCreation = false) => {
+    const presence = forCreation ? 'required' : 'optional';
+    return Joi.object({
+        email: Joi.string().email().max(255).presence(presence),
+        firstname: Joi.string().max(255).presence(presence),
+        lastname: Joi.string().max(255).presence(presence),
+        password: Joi.string().min(8).max(50).presence(presence),
+        adresse: Joi.string().max(255).allow(null).presence(presence),
+        phone: Joi.string().max(14).allow(null).presence(presence), 
+        birthday: Joi.string().allow(null).presence(presence),      
+    }).validate(data, { abortEarly: false }).error;
+}
+
 const validateLevel=(data)=>{
     return Joi.object({
        user_level: Joi.number().integer().min(2).max(5).presence('required')
@@ -64,6 +77,18 @@ const getDetailById = (id) => {
     .query("SELECT id_users, firstname, lastname, email, phone, birthday, adresse, in_post, free_date, job_search, job_name, job_date, enterprise_name, signin_options FROM users WHERE id_users=?", [id])
     .then(([result]) => result[0])
     .catch((err) =>{
+        console.log(err);
+        return err;
+    })
+}
+
+const putDetailById = (data, id) => {
+    return db
+    .query("UPDATE users SET ? WHERE id_users=?", [data, id])
+    .then(([result])=>{
+        return result.affectedRows!==0
+    })
+    .catch((err)=>{
         console.log(err);
         return err;
     })
@@ -135,6 +160,7 @@ const updateLevelUser=(id,level)=>{
 }
 module.exports = {
     validate,
+    validateUpdate,
     hashPassword,
     create,
     findOneByMail,
@@ -147,4 +173,5 @@ module.exports = {
     updateLevelUser,
     findOneById,
     validateLevel,
+    putDetailById,
 }
