@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   INDEX `fk_category_idx` (`id_cat` ASC) VISIBLE,
   CONSTRAINT `fk_category_event`
     FOREIGN KEY (`id_cat`)
-    REFERENCES `category_events` (`id_categoriy`)
+    REFERENCES `category_events` (`id_category`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
