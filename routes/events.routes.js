@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
-const { userCheck, checkAdmin } = require('../middleware/UserValidation');
+const { userCheck, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
 
 //CRUD Event
 router.get('/nextEvent/',async(req,res)=>{
@@ -70,7 +70,13 @@ router.get('/category/:id', async (req, res) => {
     return res.status(404).send('Category not found');
 });
 
-
+router.get('/myRDV',userCheck,checkSuperAdmin,async(req, res)=>{
+  const result=await event.getMyRDV();
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  return res.status(200).json(result);
+})
 
 router.get('/:id', userCheck, (req, res) => {
   //Must be auth validation//

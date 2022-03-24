@@ -195,6 +195,18 @@ const findLastWhithoutRDV=()=>{
         })
 }       
 
+const getMyRDV=()=>{
+    return db
+        .query('SELECT eventid, name,event,is_valid,u.firstname,u.lastname FROM view_event_user INNER JOIN users u ON u.id_users=view_event_user.id_users WHERE idCategorie=1')
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}   
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -213,5 +225,6 @@ module.exports = {
     removeDependancies,
     validateRDV,
     updateRDV,
-    findLastWhithoutRDV
+    findLastWhithoutRDV,
+    getMyRDV
 }
