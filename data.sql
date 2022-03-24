@@ -500,7 +500,10 @@ CREATE
  AS SELECT u.`id_users`, concat(u.`lastname`,' ',u.`firstname`) as userName, u.`user_level`,u.id_enterprise,e.name FROM `users` u left join enterprise e
 on u.id_enterprise=e.id_enterprise;
 
-
+DROP VIEW IF EXISTS `view_event_display`;
+CREATE VIEW `view_event_display`
+ AS SELECT e.`id_event`, e.`id_cat`,`name`,DATE_FORMAT(e.date_event,"%d/%m/%Y %H:%i") as date_eventFR,e.date_event,c.category_name FROM `event` e INNER JOIN category_events c
+ON e.id_cat=c.id_category WHERE e.id_cat!=1;
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),
@@ -524,3 +527,4 @@ INSERT INTO `resource_category` (`id_resource_category`, `name_resource_category
 
 INSERT INTO `category_events` (`category_name`) VALUES
 (1,'RDV');
+
