@@ -63,11 +63,24 @@ const add_CvToUser=(id_user,id_cv,is_owner)=>{
         })
 } 
 
+const findAllAdmin=()=>{
+    return db
+        .query("SELECT c.path, c.id_cv,CONCAT(u.firstname,' ',u.lastname) as user, u.id_users FROM cv c INNER JOIN cv_to_user ctu ON ctu.id_cv=c.id_cv INNER JOIN users u ON ctu.id_user=u.id_users ORDER BY u.lastname,u.firstname;")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
 module.exports = {
     findAll,
     findOne,
     create,
     add_CvToUser,
     validate,
-    findByUser
+    findByUser,
+    findAllAdmin
 }
