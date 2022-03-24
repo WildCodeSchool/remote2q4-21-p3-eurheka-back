@@ -197,7 +197,7 @@ const findLastWhithoutRDV=()=>{
 
 const getMyRDV=()=>{
     return db
-        .query('SELECT eventid, name,event,is_valid,u.firstname,u.lastname FROM view_event_user INNER JOIN users u ON u.id_users=view_event_user.id_users WHERE idCategorie=1')
+        .query("SELECT eventid, name,date_format(event,'%d/%m/%Y')as date_event, date_format(event,'%H:%i')as hour_event,is_valid,u.firstname,u.lastname FROM view_event_user INNER JOIN users u ON u.id_users=view_event_user.id_users WHERE idCategorie=1")
         .then(([result])=>{
             return result;
         })
