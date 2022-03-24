@@ -200,7 +200,6 @@ router.put('/category/:id', userCheck, checkAdmin, async (req, res) => {
 
 router.put('/rdv/:id', userCheck, async (req, res) => {
   const errors = event.validateRDV(req.body);
-  const userId = req.userData.user_id;
   if (errors) {
     const errorDetails = errors.details;
     const errorArray = [];
@@ -209,6 +208,7 @@ router.put('/rdv/:id', userCheck, async (req, res) => {
     });
     return res.status(422).json(errorArray);
   }
+  const userId = req.body.id_user;
   const result = await event.updateRDV(req.body, req.params.id, userId);
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
