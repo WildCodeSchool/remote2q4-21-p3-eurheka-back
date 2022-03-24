@@ -143,6 +143,29 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
     }
 });
 
+router.put('/:id', userCheck, async (req, res) => {
+    const errors = Users.validateUpdate(req.body);
+    if (errors) {
+        const errorDetails = errors.details;
+        const errorArray = [];
+        errorDetails.forEach((error) => {
+            errorArray.push(error.message);
+        });
+
+        return res.status(422).json(errorArray);
+    }
+    const result = await Users.putDetailById(req.body, req.params.id);
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    if (result) {
+    return res.sendStatus(204);
+}
+else {
+    return res.sendStatus(404);
+}
+})
+
 router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     const result = await Users.destroy(req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
