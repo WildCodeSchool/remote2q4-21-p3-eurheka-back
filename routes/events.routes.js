@@ -3,7 +3,6 @@ const event = require('../models/events.model');
 const { userCheck, checkAdmin } = require('../middleware/UserValidation');
 
 //CRUD Event
-<<<<<<< HEAD
 router.get('/nextEvent/',async(req,res)=>{
   const result=await event.findLastWhithoutRDV();
   if (result && (typeof (result.errno) !== 'undefined')) {
@@ -14,10 +13,6 @@ router.get('/nextEvent/',async(req,res)=>{
 
 router.get('/admin',userCheck,checkAdmin,async(req,res)=>{
   const result=await event.findAllForAdmin();
-=======
-router.get('/admin', userCheck, checkAdmin, async (req, res) => {
-  const result = await event.findAllForAdmin();
->>>>>>> dev
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
@@ -143,13 +138,8 @@ router.delete('/:id',userCheck,async (req, res) => {
     if (result && (typeof (result.errno) !== 'undefined')) {
       return res.sendStatus(500);
     }
-<<<<<<< HEAD
     if (result){
       return  res.sendStatus(204);
-=======
-    if (result) {
-      return res.sendStatus(200);
->>>>>>> dev
     }
     else
       return res.sendStatus(404);
