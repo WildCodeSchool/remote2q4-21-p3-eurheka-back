@@ -36,8 +36,27 @@ const addCvToDb = async (path) => {
     }
 }
 
-router.get('/:id', userCheck, checkAdmin, (req, res) => {
-    cv.findOne(req.params.id)
+// router.get('/:id', userCheck, checkAdmin, (req, res) => {
+//     cv.findOne(req.params.id)
+//         .then((cv) => {
+//             if(cv && (typeof(cv.errno)!=='undefined')){
+//                 return res.sendStatus(500)
+//             }
+//             if (cv) {
+//                 res.status(200).json(cv)
+//             }
+//             else {
+//                 res.status(404).send('cv not found')
+//             }
+//         })
+//         .catch((err) => {
+//             console.error(err);
+//             res.status(500).send('Internal Error');
+//         })
+// });
+
+router.get('/', userCheck, (req, res) => {
+    cv.findByUser(req.userData.user_id)
         .then((cv) => {
             if(cv && (typeof(cv.errno)!=='undefined')){
                 return res.sendStatus(500)
@@ -55,8 +74,8 @@ router.get('/:id', userCheck, checkAdmin, (req, res) => {
         })
 });
 
-router.get('/', userCheck, checkAdmin, (req, res) => {
-    cv.findAll(req.params.id)
+router.get('/all', userCheck, checkAdmin, (req, res) => {
+    cv.findAll()
         .then((cv) => {
             if(cv && (typeof(cv.errno)!=='undefined')){
                 return res.sendStatus(500)

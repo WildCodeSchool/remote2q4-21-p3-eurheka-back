@@ -20,6 +20,16 @@ const findAll = () => {
         });
 }
 
+const findByUser = (id) => {
+    return db
+        .query("SELECT * FROM cv INNER JOIN cv_to_user as t ON cv.id_cv=t.id_cv WHERE t.id_user=?", [id])
+        .then(([result]) => result)
+        .catch((err) => {
+            console.error(err);
+            return err;
+        });
+}
+
 const findOne = (id) => {
     return db
     .query("SELECT * FROM cv WHERE id_cv=?", [id])
@@ -58,5 +68,6 @@ module.exports = {
     findOne,
     create,
     add_CvToUser,
-    validate
+    validate,
+    findByUser
 }
