@@ -31,7 +31,13 @@ const validateUpdate = (data, forCreation = false) => {
         password: Joi.string().min(8).max(50).presence(presence),
         adresse: Joi.string().max(255).allow(null).presence(presence),
         phone: Joi.string().max(14).allow(null).presence(presence), 
-        birthday: Joi.string().allow(null).presence(presence),      
+        birthday: Joi.string().allow(null).presence(presence),
+        in_post: Joi.boolean().strict().allow(null).presence(presence), 
+        free_date: Joi.string().allow(null).presence(presence),
+        enterprise_name: Joi.string().max(125).allow(null).presence(presence),
+        job_date: Joi.string().allow(null).presence(presence),
+        job_name: Joi.string().max(125).allow(null).presence(presence),
+        job_search: Joi.boolean().strict().allow(null).presence(presence),      
     }).validate(data, { abortEarly: false }).error;
 }
 

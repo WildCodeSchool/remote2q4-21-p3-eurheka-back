@@ -144,9 +144,13 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
 });
 
 router.put('/:id', userCheck, async (req, res) => {
-    const errors = Users.validateUpdate(req.body);
+
+    const {job_search, in_post}=req.body;
+    let payload = {...req.body};
+    const errors = Users.validateUpdate(payload);
     if (errors) {
         const errorDetails = errors.details;
+        console.log(errors);
         const errorArray = [];
         errorDetails.forEach((error) => {
             errorArray.push(error.message);
@@ -154,7 +158,7 @@ router.put('/:id', userCheck, async (req, res) => {
 
         return res.status(422).json(errorArray);
     }
-    const result = await Users.putDetailById(req.body, req.params.id);
+    const result = await Users.putDetailById(payload, req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
         return res.sendStatus(500);
     }
