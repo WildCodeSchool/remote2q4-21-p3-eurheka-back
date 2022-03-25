@@ -61,10 +61,49 @@ const addJobToUser=(jobOfferId,idUser,owner)=>{
         })
 }
 
+const deleteJobUser=(idJob)=>{
+    return db
+        .query("DELETE FROM job_to_user WHERE id_job=?",[idJob])
+        .then(([result])=>{
+            return result.affectedRows!==0;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
+const deleteJobType=(idJob)=>{
+    return db
+    .query("DELETE FROM offer_type_to_job WHERE id_job=?",[idJob])
+    .then(([result])=>{
+        return result.affectedRows!==0;
+    })
+    .catch((err)=>{
+        console.log(err);
+        return err;
+    })
+}
+
+const deleteJob=(idJob)=>{
+    return db
+    .query("DELETE FROM job_offer WHERE id_job_offer=?",[idJob])
+    .then(([result])=>{
+        return result.affectedRows!==0;
+    })
+    .catch((err)=>{
+        console.log(err);
+        return err;
+    })
+}
+
 module.exports = {
     getOfferTypeAll,
     validate,
     create,
     addJobToCat,
     addJobToUser,
+    deleteJobUser,
+    deleteJobType,
+    deleteJob,
 }

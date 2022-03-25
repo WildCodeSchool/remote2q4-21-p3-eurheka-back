@@ -58,10 +58,10 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
         return res.status(422).send('File missing');
     }
     //Only for  superAdmin
-    const id_user=req.userData.user_id;
+    const id_user = req.userData.user_id;
     const path = req.file.path;
-    const { name,id_type } = req.body;
-    const errors = jobOffer.validate({ path, name,id_user,id_type });
+    const { name, id_type } = req.body;
+    const errors = jobOffer.validate({ path, name, id_user, id_type });
     if (errors) {
         const errorDetails = errors.details;
         const errorArray = [];
@@ -70,23 +70,26 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
         });
         return res.status(422).json(errorArray);
     }
-    const jobBDD=await addOfferToDb(name, path);
-    if (jobBDD.error!==0){
+    const jobBDD = await addOfferToDb(name, path);
+    if (jobBDD.error !== 0) {
         return res.sendStatus(jobBDD.error);
     }
-    const jobOfferId=jobBDD.newId;
-    const AddedJobType=await jobOffer.addJobToCat(jobOfferId,id_type);
+    const jobOfferId = jobBDD.newId;
+    const addedJobType = await jobOffer.addJobToCat(jobOfferId, id_type);
     //Check if OK
-    if(AddedJobType&&(typeof(AddedJobType.errno)!=='undefined')){
+    if (addedJobType && (typeof (addedJobType.errno) !== 'undefined')) {
         return res.sendStatus(500);
     }
-    if(AddedJobType){
+    if (addedJobType) {
         //Add Job to user
-        const AddedJobUser=await jobOffer.addJobToUser(jobOfferId,id_user,true);
-        if(AddedJobUser&&(typeof(AddedJobUser.errno)!=='undefined')){
+        const addedJobUser = await jobOffer.addJobToUser(jobOfferId, id_user, true);
+        if (addedJobUser && (typeof (addedJobUser.errno) !== 'undefined')) {
             return res.sendStatus(500);
         }
-        return res.sendStatus(201);
+        if(addedJobUser)
+            return res.sendStatus(201);
+        else   
+            return res.status(204).send('No job created')
     }
 });
 
@@ -95,7 +98,33 @@ router.put('/:id', userCheck, checkSuperAdmin, async (req, res) => {
 });
 
 router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
-    return res.sendStatus(402);
+    //Delete from users
+    const deletedUserJob = await jobOffer.deleteJobUser(req.params.id);
+    if (deletedUserJob && (typeof (deletedUserJob.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    if (deletedUserJob) {
+        //delete from type job
+        const deletedTypeJob = await jobOffer.deleteJobType(req.params.id);
+        if (deletedTypeJob && (typeof (deletedTypeJob.errno) !== 'undefined')) {
+            return res.sendStatus(500);
+        }
+        if (deletedTypeJob) {
+            //delete job
+            const deletedJob = await jobOffer.deleteJob(req.params.id);
+            if (deletedJob && (typeof (deletedJob.errno) !== 'undefined')) {
+                return res.sendStatus(500);
+            }
+            if(deletedJob)
+                return res.sendStatus(204);
+            else
+                return res.status(404).send('No job found');;
+        }
+        else
+            return res.status(404).send('No job found');;
+    }
+    else
+        return res.status(404).send('No job found');
 });
 
 
