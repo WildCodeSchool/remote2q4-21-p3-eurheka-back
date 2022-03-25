@@ -14,7 +14,8 @@ const validate = (data, forCreation = true) => {
 
 const validateRDV=(data)=>{
     return Joi.object({
-        is_valid : Joi.boolean().presence('required')
+        is_valid : Joi.boolean().presence('required'),
+        id_user : Joi.number().integer().presence('required')
     }).validate(data, { abortEarly: false }).error;
 }
 
@@ -195,6 +196,18 @@ const findLastWhithoutRDV=()=>{
         })
 }       
 
+const getMyRDV=()=>{
+    return db
+        .query("SELECT v.eventid,v.id_users, v.name,date_format(v.event,'%d/%m/%Y')as date_event, date_format(v.event,'%H:%i')as hour_event,v.is_valid,u.firstname,u.lastname FROM view_event_user v INNER JOIN users u ON u.id_users=v.id_users WHERE idCategorie=1")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}   
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -213,5 +226,6 @@ module.exports = {
     removeDependancies,
     validateRDV,
     updateRDV,
-    findLastWhithoutRDV
+    findLastWhithoutRDV,
+    getMyRDV
 }

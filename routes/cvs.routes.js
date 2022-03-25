@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const multer = require('multer');
 const cv = require('../models/cvs.model');
-const { userCheck, checkLevel, checkAdmin } = require('../middleware/UserValidation');
+const { userCheck, checkLevel, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
 
 const storageCv = multer.diskStorage(
     {
@@ -122,4 +122,12 @@ router.delete('/:id', (req, res) => {
 
 });
 
+router.get('/admin',userCheck,checkSuperAdmin,async(req,res)=>{
+    const result=await cv.findAllAdmin();
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
+
+})
 module.exports = router;
