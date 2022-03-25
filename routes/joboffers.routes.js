@@ -40,7 +40,7 @@ router.get('/', async(req, res) => {
 });
 
 router.get('/admin/', userCheck, checkSuperAdmin,async(req, res) => {
-    const result=await jobOffer
+    const result=await jobOffer.getAdminJob();
     if (result && (typeof (result.errno) !== 'undefined')) {
         return res.sendStatus(500);
     }

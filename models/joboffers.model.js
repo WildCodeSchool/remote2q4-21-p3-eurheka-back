@@ -97,6 +97,18 @@ const deleteJob=(idJob)=>{
     })
 }
 
+const getAdminJob=()=>{
+    return db
+        .query("SELECT id_job,name, path,name_offer FROM view_admin_job")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
 module.exports = {
     getOfferTypeAll,
     validate,
@@ -106,4 +118,5 @@ module.exports = {
     deleteJobUser,
     deleteJobType,
     deleteJob,
+    getAdminJob,
 }
