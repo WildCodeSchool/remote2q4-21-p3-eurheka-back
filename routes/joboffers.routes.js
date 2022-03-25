@@ -21,7 +21,7 @@ const storageOffer = multer.diskStorage(
 
 const uploadOffer = multer({ storage: storageOffer });
 
-const addOfferToDb = async (path, name) => {
+const addOfferToDb = async (name, path) => {
     //Envoi à la BDD
     const result = await jobOffer.create(name, path);
     if (result && (typeof (result.errno) !== 'undefined')) {
@@ -35,8 +35,16 @@ const addOfferToDb = async (path, name) => {
     }
 }
 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     return res.sendStatus(402);
+});
+
+router.get('/admin/', userCheck, checkSuperAdmin,async(req, res) => {
+    const result=await jobOffer
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
 });
 
 router.get('/offertype/', async (req, res) => {

@@ -506,6 +506,10 @@ CREATE VIEW `view_event_display`
  AS SELECT e.`id_event`, e.`id_cat`,`name`,DATE_FORMAT(e.date_event,"%d/%m/%Y %H:%i") as date_eventFR,e.date_event,c.category_name FROM `event` e INNER JOIN category_events c
 ON e.id_cat=c.id_category WHERE e.id_cat!=1;
 
+CREATE
+ VIEW `view_admin_job`
+ AS SELECT ju.`is_owner`,ju.`id_user`,ju.`id_job`,j.name,j.path,o.name_offer,oj.id_type FROM `job_to_user` ju INNER JOIN job_offer j ON j.id_job_offer=ju.id_job INNER JOIN offer_type_to_job oj ON oj.id_job=j.id_job_offer INNER JOIN offer_type o ON o.id_offer_type=oj.id_type; 
+
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),
 (2, 'Temps partiel'),
