@@ -159,6 +159,7 @@ DROP TABLE IF EXISTS `job_offer` ;
 CREATE TABLE IF NOT EXISTS `job_offer` (
   `id_job_offer` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(200) NOT NULL,
+  `name` VARCHAR(255) NOT NULL, 
   PRIMARY KEY (`id_job_offer`))
 ENGINE = InnoDB;
 
