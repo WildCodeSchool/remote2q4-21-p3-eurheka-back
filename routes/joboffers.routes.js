@@ -36,7 +36,11 @@ const addOfferToDb = async (name, path,category) => {
 }
 
 router.get('/', async(req, res) => {
-    return res.sendStatus(402);
+    const result=await jobOffer.getAllOffers();
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
 });
 
 router.get('/admin/', userCheck, checkSuperAdmin,async(req, res) => {
@@ -118,7 +122,7 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
 });
 
 router.put('/:id', userCheck, checkSuperAdmin, async (req, res) => {
-    return res.sendStatus(402);
+    return res.sendStatus(404);
 });
 
 router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {

@@ -134,7 +134,17 @@ const getJobCateory=()=>{
         return err;
     })
 }
-
+const getAllOffers=()=>{
+    return db
+        .query("SELECT id_job,name, path,name_offer,category_name, id_type,cat_job FROM view_admin_job")
+        .then(([result])=>{
+            return result;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
 module.exports = {
     getOfferTypeAll,
     validate,
@@ -147,4 +157,5 @@ module.exports = {
     getAdminJob,
     getCount,
     getJobCateory,
+    getAllOffers,
 }
