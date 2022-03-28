@@ -109,6 +109,15 @@ const getAdminJob=()=>{
         })
 }
 
+const getCount=()=>{
+    return db
+        .query("SELECT COUNT(*) as nb FROM job_offer")
+        .then(([result])=>{
+            return result[0];
+        })
+
+}
+
 module.exports = {
     getOfferTypeAll,
     validate,
@@ -119,4 +128,5 @@ module.exports = {
     deleteJobType,
     deleteJob,
     getAdminJob,
+    getCount,
 }

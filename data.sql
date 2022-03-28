@@ -159,11 +159,12 @@ DROP TABLE IF EXISTS `job_offer` ;
 CREATE TABLE IF NOT EXISTS `job_offer` (
   `id_job_offer` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(200) NOT NULL,
-  `name` VARCHAR(255) NOT NULL, 
+  `name` VARCHAR(255) NOT NULL,
+  `cat_job` INT NOT NULL, 
   PRIMARY KEY (`id_job_offer`))
 ENGINE = InnoDB;
 
-
+ALTER TABLE `job_offer` ADD  CONSTRAINT `fk_job_cat` FOREIGN KEY (`cat_job`) REFERENCES `job_category`(`id_job_category`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 -- -----------------------------------------------------
 -- Table `job_to_user`
 -- -----------------------------------------------------

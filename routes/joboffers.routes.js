@@ -55,6 +55,14 @@ router.get('/offertype/', async (req, res) => {
     return res.status(200).json(result);
 });
 
+router.get('/count/',async (req,res)=>{
+    const result=await jobOffer.getCount();
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
+});
+
 router.get('/:id', async (req, res) => {
     return res.sendStatus(402);
 });
