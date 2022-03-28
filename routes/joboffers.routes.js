@@ -21,9 +21,9 @@ const storageOffer = multer.diskStorage(
 
 const uploadOffer = multer({ storage: storageOffer });
 
-const addOfferToDb = async (name, path) => {
+const addOfferToDb = async (name, path,category) => {
     //Envoi à la BDD
-    const result = await jobOffer.create(name, path);
+    const result = await jobOffer.create(name, path,category);
     if (result && (typeof (result.errno) !== 'undefined')) {
         return { error: 500 };
     }
@@ -55,6 +55,14 @@ router.get('/offertype/', async (req, res) => {
     return res.status(200).json(result);
 });
 
+router.get('/category',async(req,res)=>{
+    const result = await jobOffer.getJobCateory();
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
+})
+
 router.get('/count/',async (req,res)=>{
     const result=await jobOffer.getCount();
     if (result && (typeof (result.errno) !== 'undefined')) {
@@ -76,8 +84,8 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
     //Only for  superAdmin
     const id_user = req.userData.user_id;
     const path = req.file.path;
-    const { name, id_type } = req.body;
-    const errors = jobOffer.validate({ path, name, id_user, id_type });
+    const { name, id_type,cat_job } = req.body;
+    const errors = jobOffer.validate({ path, name, id_user, id_type,cat_job });
     if (errors) {
         const errorDetails = errors.details;
         const errorArray = [];
@@ -86,7 +94,7 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
         });
         return res.status(422).json(errorArray);
     }
-    const jobBDD = await addOfferToDb(name, path);
+    const jobBDD = await addOfferToDb(name, path,cat_job);
     if (jobBDD.error !== 0) {
         return res.sendStatus(jobBDD.error);
     }

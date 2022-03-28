@@ -509,7 +509,7 @@ ON e.id_cat=c.id_category WHERE e.id_cat!=1;
 
 CREATE
  VIEW `view_admin_job`
- AS SELECT ju.`is_owner`,ju.`id_user`,ju.`id_job`,j.name,j.path,o.name_offer,oj.id_type FROM `job_to_user` ju INNER JOIN job_offer j ON j.id_job_offer=ju.id_job INNER JOIN offer_type_to_job oj ON oj.id_job=j.id_job_offer INNER JOIN offer_type o ON o.id_offer_type=oj.id_type; 
+ AS SELECT ju.`is_owner`,ju.`id_user`,ju.`id_job`,j.name,j.path,o.name_offer,oj.id_type,c.name as category_name, j.cat_job FROM `job_to_user` ju INNER JOIN job_offer j ON j.id_job_offer=ju.id_job INNER JOIN offer_type_to_job oj ON oj.id_job=j.id_job_offer INNER JOIN offer_type o ON o.id_offer_type=oj.id_type INNER JOIN job_category c ON c.id_job_category=j.cat_job;  
 
 INSERT INTO `offer_type` (`id_offer_type`, `name_offer`) VALUES
 (1, 'Temps plein'),

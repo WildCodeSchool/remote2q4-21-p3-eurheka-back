@@ -9,7 +9,8 @@ const validate= (data, forCreation = true) => {
         path: Joi.string().max(255).presence(presence),
         name: Joi.string().max(255).presence(presence),
         id_user:Joi.number().integer().presence(presence),
-        id_type:Joi.number().integer().presence(presence)
+        id_type:Joi.number().integer().presence(presence),
+        cat_job:Joi.number().integer().presence(presence),
     }).validate(data, { abortEarly: false }).error;
 }
 
@@ -25,9 +26,9 @@ const getOfferTypeAll=()=>{
         })
 }
 
-const create=(name,path)=>{
+const create=(name,path,category)=>{
     return db
-        .query("INSERT INTO job_offer (path,name) VALUES(?,?)",[path, name])
+        .query("INSERT INTO job_offer (path,name,cat_job) VALUES(?,?,?)",[path, name,category])
         .then(([result])=>{
             return result.insertId;
         })
@@ -99,7 +100,7 @@ const deleteJob=(idJob)=>{
 
 const getAdminJob=()=>{
     return db
-        .query("SELECT id_job,name, path,name_offer FROM view_admin_job")
+        .query("SELECT id_job,name, path,name_offer,category_name FROM view_admin_job")
         .then(([result])=>{
             return result;
         })
@@ -115,7 +116,23 @@ const getCount=()=>{
         .then(([result])=>{
             return result[0];
         })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
 
+}
+
+const getJobCateory=()=>{
+    return db
+    .query("SELECT id_job_category,name FROM job_category ORDER BY name")
+    .then(([result])=>{
+        return result;
+    })
+    .catch((err)=>{
+        console.log(err);
+        return err;
+    })
 }
 
 module.exports = {
@@ -129,4 +146,5 @@ module.exports = {
     deleteJob,
     getAdminJob,
     getCount,
+    getJobCateory,
 }
