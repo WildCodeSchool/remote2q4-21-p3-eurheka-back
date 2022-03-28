@@ -174,7 +174,7 @@ router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     const result = await Users.destroy(req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
         if (result.errno === 1451) {
-            return res.status(500).json({ error: 1451, message: "Suppresion impossible, l'utilisateur a encore des dépendances" });
+            return res.status(500).json({ error: 1451, message: "Suppression impossible, l'utilisateur a encore des dépendances" });
         }
         else
             return res.sendStatus(500);
