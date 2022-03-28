@@ -97,7 +97,6 @@ router.get('/', (req, res) => {
 
 router.get('/:id', userCheck, async (req, res) => {
     const idUser = req.userData.user_id;
-    console.log(idUser);
     const levelUser = req.userData.user_level;
     if ((idUser === parseInt(req.params.id))||(levelUser === userRole.SUPER_ADMIN)) {
         const result = await Users.getDetailById(req.params.id);
@@ -143,6 +142,33 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
         return res.sendStatus(404);
     }
 });
+
+router.put('/:id', userCheck, async (req, res) => {
+
+    const {job_search, in_post}=req.body;
+    let payload = {...req.body};
+    const errors = Users.validateUpdate(payload);
+    if (errors) {
+        const errorDetails = errors.details;
+        console.log(errors);
+        const errorArray = [];
+        errorDetails.forEach((error) => {
+            errorArray.push(error.message);
+        });
+
+        return res.status(422).json(errorArray);
+    }
+    const result = await Users.putDetailById(payload, req.params.id);
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    if (result) {
+    return res.sendStatus(204);
+}
+else {
+    return res.sendStatus(404);
+}
+})
 
 router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     const result = await Users.destroy(req.params.id);

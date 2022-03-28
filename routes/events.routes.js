@@ -1,26 +1,34 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
-const { userCheck,checkAdmin } = require('../middleware/UserValidation');
+const { userCheck, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
 
 //CRUD Event
+router.get('/nextEvent/',async(req,res)=>{
+  const result=await event.findLastWhithoutRDV();
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  return res.status(200).json(result);
+});
+
 router.get('/admin',userCheck,checkAdmin,async(req,res)=>{
   const result=await event.findAllForAdmin();
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
-  const now=new Date(Date.now());
-  const eventToSend=[];
-  if (result){
-    result.forEach((event)=>{
-      const eventDate=new Date(event.date_event);
-      let isPassed=false;
-      if(eventDate<now)
-        isPassed=true;
-      eventToSend.push({...event,isPassed});
+  const now = new Date(Date.now());
+  const eventToSend = [];
+  if (result) {
+    result.forEach((event) => {
+      const eventDate = new Date(event.date_event);
+      let isPassed = false;
+      if (eventDate < now)
+        isPassed = true;
+      eventToSend.push({ ...event, isPassed });
     })
   }
   return res.status(200).json(eventToSend);
-} );
+});
 
 router.get('/myevents/', userCheck, (req, res) => {
   userId = req.userData.user_id;
@@ -55,14 +63,20 @@ router.get('/category/:id', async (req, res) => {
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
-  if (result){
+  if (result) {
     return res.status(200).json(result);
   }
   else
     return res.status(404).send('Category not found');
 });
 
-
+router.get('/myRDV',userCheck,checkSuperAdmin,async(req, res)=>{
+  const result=await event.getMyRDV();
+  if (result && (typeof (result.errno) !== 'undefined')) {
+    return res.sendStatus(500);
+  }
+  return res.status(200).json(result);
+})
 
 router.get('/:id', userCheck, (req, res) => {
   //Must be auth validation//
@@ -115,33 +129,33 @@ router.post('/', userCheck, (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id',userCheck,(req, res) => {
   return res.sendStatus(402);
 });
 
-router.delete('/:id',async (req, res) => {
+router.delete('/:id',userCheck,async (req, res) => {
   //Remove Dependancies
-  const removedDependancies=await event.removeDependancies(req.params.id);
+  const removedDependancies = await event.removeDependancies(req.params.id);
   if (removedDependancies && (typeof (removedDependancies.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
-  if(removedDependancies){
-    const result=event.deleteEvent(req.params.id);
+  if (removedDependancies) {
+    const result = event.deleteEvent(req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
       return res.sendStatus(500);
     }
     if (result){
-      return  res.sendStatus(200);
+      return  res.sendStatus(204);
     }
     else
       return res.sendStatus(404);
   }
-  
+
 });
 
 //CUD Event Category
 
-router.post('/category/', async (req, res) => {
+router.post('/category/', userCheck, checkAdmin, async (req, res) => {
   const errors = event.validateCategory(req.body);
   if (errors) {
     cccc
@@ -158,9 +172,9 @@ router.post('/category/', async (req, res) => {
   }
 });
 
-router.put('/category/:id', async (req, res) => {
-  const id_event=parseInt(req.params.id);
-  if(id_event===1){
+router.put('/category/:id', userCheck, checkAdmin, async (req, res) => {
+  const id_event = parseInt(req.params.id);
+  if (id_event === 1) {
     return res.status(403).send('Event non updatable');
   }
   const errors = event.validateCategory(req.body, false);
@@ -172,7 +186,7 @@ router.put('/category/:id', async (req, res) => {
     });
     return res.status(422).json(errorArray);
   }
-  const result = await event.updateCategory(req.body,req.params.id);
+  const result = await event.updateCategory(req.body, req.params.id);
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
@@ -184,31 +198,31 @@ router.put('/category/:id', async (req, res) => {
   }
 });
 
-router.put('/rdv/:id',userCheck,async(req,res)=>{
-   const errors=event.validateRDV(req.body);
-   const userId=req.userData.user_id;
-   if(errors){
+router.put('/rdv/:id', userCheck, async (req, res) => {
+  const errors = event.validateRDV(req.body);
+  if (errors) {
     const errorDetails = errors.details;
     const errorArray = [];
     errorDetails.forEach((error) => {
       errorArray.push(error.message);
     });
     return res.status(422).json(errorArray);
-   }
-  const result=await event.updateRDV(req.body,req.params.id,userId);
+  }
+  const userId = req.body.id_user;
+  const result = await event.updateRDV(req.body, req.params.id, userId);
   if (result && (typeof (result.errno) !== 'undefined')) {
     return res.sendStatus(500);
   }
-  if(result){
-    return res.status(200).json({id:req.params.id,userId,...req.body});
+  if (result) {
+    return res.status(200).json({ id: req.params.id, userId, ...req.body });
   }
   else
     return res.sendStatus(404);
 });
 
-router.delete('/category/:id', async (req, res) => {
-  const id_event=parseInt(req.params.id);
-  if(id_event===1){
+router.delete('/category/:id', userCheck, checkAdmin, async (req, res) => {
+  const id_event = parseInt(req.params.id);
+  if (id_event === 1) {
     return res.status(403).send('Event non removable');
   }
   const result = await event.deleteCategory(req.params.id);
