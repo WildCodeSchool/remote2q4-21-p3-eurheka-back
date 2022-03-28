@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
+const  {sendNotification}=require('../utils/mail');
 const { userInscriptionOptions, maxAge, userRole } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
 const { userCheck, checkSuperAdmin } = require('../middleware/UserValidation');
@@ -39,6 +40,13 @@ router.post('/', async (req, res) => {
         if (newId && (typeof (newId.errno) !== 'undefined')) {
             return res.sendStatus(500);
         }
+        sendNotification(firstname, lastname, email)
+        .then((result) => {
+           console.log('mail sent')
+        })
+        .catch((err) => {
+            console.log(err);
+        })
         return res.status(201).json({ userId: newId });
     }
 });
