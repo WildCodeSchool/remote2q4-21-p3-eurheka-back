@@ -119,7 +119,7 @@ router.put('/:id', (req, res) => {
 
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', userCheck, async (req, res) => {
     //Remove all link in cv where ID
     const CVExists = await cv.findOne(req.params.id);    
     if (CVExists && typeof (CVExists.errno) !== 'undefined') {
@@ -135,7 +135,7 @@ router.delete('/:id', async (req, res) => {
             return res.sendStatus(500);
         }
         if (destroyCVExists > 0) {
-        return res.status(200).send('CV deleted')
+        return res.status(204).send('CV deleted')
         }
         else {
         return res.status(404).send('CV not found');
