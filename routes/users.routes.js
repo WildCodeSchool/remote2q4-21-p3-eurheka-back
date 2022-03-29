@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
+const  {sendNotification}=require('../utils/mail');
 const { userInscriptionOptions, maxAge, userRole } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
 const { userCheck, checkSuperAdmin } = require('../middleware/UserValidation');
@@ -39,6 +40,13 @@ router.post('/', async (req, res) => {
         if (newId && (typeof (newId.errno) !== 'undefined')) {
             return res.sendStatus(500);
         }
+        sendNotification(firstname, lastname, email)
+        .then((result) => {
+           console.log('mail sent')
+        })
+        .catch((err) => {
+            console.log(err);
+        })
         return res.status(201).json({ userId: newId });
     }
 });
@@ -174,7 +182,7 @@ router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     const result = await Users.destroy(req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
         if (result.errno === 1451) {
-            return res.status(500).json({ error: 1451, message: "Suppresion impossible, l'utilisateur a encore des dépendances" });
+            return res.status(500).json({ error: 1451, message: "Suppression impossible, l'utilisateur a encore des dépendances" });
         }
         else
             return res.sendStatus(500);
