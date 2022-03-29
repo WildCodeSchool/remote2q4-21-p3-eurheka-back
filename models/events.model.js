@@ -55,7 +55,7 @@ const findAllForAdmin=()=>{
 
 const findAllRelatedToUser= (userId) => {
     return db
-        .query("SELECT * FROM view_event_user WHERE id_users = ?", [userId])
+        .query("SELECT *,date_format(event,'%d/%m/%Y %H:%i')as date_event FROM view_event_user WHERE id_users = ?", [userId])
         .then(([results]) => results)
         .catch((err) => {
             console.log(err);

@@ -36,24 +36,24 @@ const addCvToDb = async (path) => {
     }
 }
 
-// router.get('/:id', userCheck, checkAdmin, (req, res) => {
-//     cv.findOne(req.params.id)
-//         .then((cv) => {
-//             if(cv && (typeof(cv.errno)!=='undefined')){
-//                 return res.sendStatus(500)
-//             }
-//             if (cv) {
-//                 res.status(200).json(cv)
-//             }
-//             else {
-//                 res.status(404).send('cv not found')
-//             }
-//         })
-//         .catch((err) => {
-//             console.error(err);
-//             res.status(500).send('Internal Error');
-//         })
-// });
+ router.get('/:id', userCheck, checkAdmin, (req, res) => {
+     cv.findOne(req.params.id)
+         .then((cv) => {
+            if(cv && (typeof(cv.errno)!=='undefined')){
+                return res.sendStatus(500)
+             }
+             if (cv) {
+                 res.status(200).json(cv)
+             }
+             else {
+                 res.status(404).send('cv not found')
+             }
+         })
+         .catch((err) => {
+             console.error(err);
+             res.status(500).send('Internal Error');
+         })
+ });
 
 router.get('/', userCheck, (req, res) => {
     cv.findByUser(req.userData.user_id)
@@ -118,8 +118,31 @@ router.post('/', userCheck, uploadCv.single('file'), async (req, res) => {
 router.put('/:id', (req, res) => {
 
 });
-router.delete('/:id', (req, res) => {
 
+router.delete('/:id', userCheck, async (req, res) => {
+    //Remove all link in cv where ID
+    const CVExists = await cv.findOne(req.params.id);    
+    if (CVExists && typeof (CVExists.errno) !== 'undefined') {
+        return res.sendStatus(500);
+    }
+    if (CVExists) {
+        const result = await cv.deleteRelation(req.params.id);
+        if (result && (typeof (result.errno) !== 'undefined')) {
+            return res.sendStatus(500);
+        }
+        const destroyCVExists = await cv.destroyCVById(req.params.id);
+        if (destroyCVExists && (typeof (destroyCVExists.errno) !== 'undefined')) {
+            return res.sendStatus(500);
+        }
+        if (destroyCVExists > 0) {
+        return res.status(204).send('CV deleted')
+        }
+        else {
+        return res.status(404).send('CV not found');
+        }
+    } else {
+        return res.status(404).send('CV not found');
+    }
 });
 
 router.get('/admin',userCheck,checkSuperAdmin,async(req,res)=>{

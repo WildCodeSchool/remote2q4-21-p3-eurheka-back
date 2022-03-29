@@ -74,6 +74,26 @@ const findAllAdmin=()=>{
             return err;
         })
 }
+const deleteRelation=(id)=>{
+    return db
+    .query(`DELETE FROM cv_to_user WHERE id_cv=?`, [id])
+    .then(([result]) => result.affectedRows)
+    .catch((err) => {
+        console.log(err);
+        return err;
+    })
+}
+
+
+const destroyCVById=(id)=>{    
+    return db
+        .query("DELETE FROM cv WHERE id_cv=?",[id])
+        .then(([result])=>result.affectedRows)
+        .catch((err) => {
+            console.log(err);
+            return err;
+        });
+}
 
 module.exports = {
     findAll,
@@ -82,5 +102,7 @@ module.exports = {
     add_CvToUser,
     validate,
     findByUser,
-    findAllAdmin
+    findAllAdmin,
+    destroyCVById,
+    deleteRelation,
 }
