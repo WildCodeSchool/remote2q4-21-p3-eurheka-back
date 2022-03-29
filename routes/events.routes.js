@@ -236,4 +236,5 @@ router.delete('/category/:id', userCheck, checkAdmin, async (req, res) => {
     return res.sendStatus(404);
   }
 });
+
 module.exports = router;
