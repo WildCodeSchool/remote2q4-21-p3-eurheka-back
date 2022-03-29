@@ -152,8 +152,6 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
 });
 
 router.put('/:id', userCheck, async (req, res) => {
-    console.log(req.body);
-
     const {job_search, in_post}=req.body;
     let payload = {...req.body};
     const errors = Users.validateUpdate(payload);
