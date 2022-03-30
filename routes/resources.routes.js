@@ -75,11 +75,11 @@ const uploadDoc = multer({ storage: storageDoc });
 router.get('/bycat/:id', checkLevel, async (req, res) => {
     //Check user connection and level
     const userLevel = req.userData.user_level;
-    const idCategory = 3;
+    const idCategory = req.params.id;
     //Get information from model
     const result = await resource.findAllByCategory(userLevel, idCategory);
     if (result) {
-        return res.status(200).json(result);
+        return res.status(200).json(result); 
     }
     else {
         return res.sendStatus(500);
