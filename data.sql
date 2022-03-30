@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id_enterprise` INT NULL,
   `enterprise_name` VARCHAR(150) NULL,
   `signin_options` TINYINT NOT NULL DEFAULT '0',
+  `token_lost` VARCHAR NULL DEFAULT NULL,
   PRIMARY KEY (`id_users`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   INDEX `fk_user_enterprise_idx` (`id_enterprise` ASC) VISIBLE,

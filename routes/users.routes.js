@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
 const Auth = require('../models/auth.model');
-const  {sendNotification}=require('../utils/mail');
+const  {sendNotification,sendNewPass}=require('../utils/mail');
 const { userInscriptionOptions, maxAge, userRole } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
 const { userCheck, checkSuperAdmin } = require('../middleware/UserValidation');
@@ -49,6 +49,73 @@ router.post('/', async (req, res) => {
         })
         return res.status(201).json({ userId: newId });
     }
+});
+router.post('/lost/',async(req,res)=>{
+    const errors = Users.validate(req.body,false);
+    if (errors) {
+        return res.status(422).json({ validationErrors: errors.details });
+    }
+    //check if user already exists
+    const existUser=await Users.findOneByMail(req.body.email);
+    if(existUser&&(typeof(existUser.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    if(!existUser){
+        return res.sendStatus(404);
+    }
+    const idUser=existUser.id_users;
+    //Generate token
+    const value=idUser+Date.now();
+    console.log(`value : ${value}`);
+    const result=await Users.createTokenForPass(idUser,value);
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    if(result){
+        sendMail=await sendNewPass(req.body.email,value)
+        .then((result) => {
+            return res.sendStatus(204);
+         })
+         .catch((err) => {
+             return res.sendStatus(500);
+         })
+
+    }
+    else
+        return res.sendStatus(500);
+
+})
+
+router.post('/newPass/',async (req,res)=>{
+    const errors = Users.validateLostPass(req.body,false);
+    if (errors) {
+        return res.status(422).json({ validationErrors: errors.details });
+    }
+    //Change password if user exist and token is OK
+    const existUser=await Users.findOneByMailForPass(req.body.email);
+    if(existUser&&(typeof(existUser.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    if(!existUser){
+        return res.sendStatus(404);
+    }
+    const idUser=existUser.id_users;
+    const userToken=existUser.token_lost;
+    console.log(userToken);
+    console.log(req.body.token);
+    if (req.body.token!==userToken){
+        return res.sendStatus(403);
+    }
+    //Encrypt new password, empty token
+    const hashedPassword=await Users.hashPassword(req.body.password);
+    const passChanged=await Users.updateLostPassword(idUser,hashedPassword);
+    if(passChanged&&(typeof(passChanged.errno)!=='undefined')){
+        return res.sendStatus(500);
+    }
+    if(passChanged)
+        return res.sendStatus(204);
+    else
+        return res.sendStatus(404);
 });
 
 router.post('/login/', async (req, res) => {
@@ -193,6 +260,7 @@ router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
         return res.sendStatus(404);
     }
 });
+
 
 
 module.exports = router;
