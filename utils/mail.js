@@ -56,7 +56,7 @@ async function sendNewPass ( email,token){
         from: process.env.MAIL_SENDER,
         to: email,
         subject: "Réinitialisation du mot de passe",
-        html: `<p>Bonjour, Vous avez demandé de réinitialiser votre mot de passe sur le site Eurhéka</p></p>Veuillez vous rendre sur la page de connexion du site, rubrique mot de passe perdu et saisir le code suivant : ${token}</p><p>Si vous n'êtes pas à l'origine de ce message, aucune action n'est nécessaire.</p><>Cordialemnt, l'équipe Eurhéka</p>`
+        html: `<p>Bonjour, Vous avez demandé de réinitialiser votre mot de passe sur le site Eurhéka</p></p>Veuillez vous rendre sur la page de connexion du site, rubrique mot de passe perdu et saisir le code suivant : ${token}</p><p>Si vous n'êtes pas à l'origine de ce message, aucune action n'est nécessaire.</p><p>Cordialement, l'équipe Eurhéka</p>`
     });
     return info.accepted[0];
 
