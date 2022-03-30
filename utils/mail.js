@@ -52,12 +52,9 @@ async function sendNewPass ( email,token){
             pass: process.env.MAIL_SENDER_PASSWORD
         },
     });
-    let messageMod = `Mail du site eurheka!`;
-    //tempo
-    console.log(email);
     let info = await transporter.sendMail({
         from: process.env.MAIL_SENDER,
-        to: process.env.MAIL_DEST,
+        to: email,
         subject: "Réinitialisation du mot de passe",
         html: `<p>Bonjour, Vous avez demandé de réinitialiser votre mot de passe sur le site Eurhéka</p></p>Veuillez vous rendre sur la page de connexion du site, rubrique mot de passe perdu et saisir le code suivant : ${token}</p><p>Si vous n'êtes pas à l'origine de ce message, aucune action n'est nécessaire.</p><>Cordialemnt, l'équipe Eurhéka</p>`
     });
