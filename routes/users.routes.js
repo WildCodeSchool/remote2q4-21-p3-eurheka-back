@@ -50,6 +50,7 @@ router.post('/', async (req, res) => {
         return res.status(201).json({ userId: newId });
     }
 });
+
 router.post('/lost/',async(req,res)=>{
     const errors = Users.validate(req.body,false);
     if (errors) {
