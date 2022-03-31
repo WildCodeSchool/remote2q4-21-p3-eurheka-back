@@ -12,11 +12,10 @@ router.get('/', userCheck, checkAdmin, (req, res) => {
                 return res.sendStatus(500);
             }
             res.status(200).json(result)
+        })
         .catch((err)=>{
             return res.sendStatus(500);
         })
-        })
-
 });
 
 router.get('/eurheka/', (req, res) => {
