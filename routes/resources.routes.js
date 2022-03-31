@@ -39,10 +39,10 @@ const addResourceToDb = async (payload) => {
     }
 }
 
-const addThemeToResource=(themes,resourceId)=>{
+const addThemeToResource = (themes, resourceId) => {
     try {
         themes.forEach(async (themeItem) => {
-            if(themeItem.checked){
+            if (themeItem.checked) {
                 let idTheme = themeItem.idTheme;
                 let result = await theme.add_RessourceTheme(resourceId, idTheme);
                 if (result && (typeof (result.errno) !== 'undefined')) {
@@ -50,10 +50,10 @@ const addThemeToResource=(themes,resourceId)=>{
                 }
             }
         })
-        return {error:0}
+        return { error: 0 }
     }
     catch (e) {
-        return {error:500};
+        return { error: 500 };
     }
 }
 
@@ -151,7 +151,7 @@ router.get('/:id', (req, res) => {
 
 });
 
-router.post('/job/',userCheck, checkAdmin , uploadJob.single('file'), async (req, res) => {
+router.post('/job/', userCheck, checkAdmin, uploadJob.single('file'), async (req, res) => {
     //Needed for model 
     const path = req.file.path;
     const visibility = req.body.visibility;
@@ -162,9 +162,9 @@ router.post('/job/',userCheck, checkAdmin , uploadJob.single('file'), async (req
     const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        const themes=JSON.parse(req.body.themes);
-        const addTheme=addThemeToResource(themes,newDocId);
-        if(addTheme.error===0)
+        const themes = JSON.parse(req.body.themes);
+        const addTheme = addThemeToResource(themes, newDocId);
+        if (addTheme.error === 0)
             return res.sendStatus(201);
         else
             return res.sendStatus(addTheme.error);
@@ -177,7 +177,7 @@ router.post('/job/',userCheck, checkAdmin , uploadJob.single('file'), async (req
     }
 });
 
-router.post('/doc/',userCheck, checkAdmin ,uploadDoc.single('file'), async (req, res) => {
+router.post('/doc/', userCheck, checkAdmin, uploadDoc.single('file'), async (req, res) => {
     const path = req.file.path;
     const visibility = req.body.visibility;
     const id_cat = req.body.id_cat;
@@ -187,9 +187,9 @@ router.post('/doc/',userCheck, checkAdmin ,uploadDoc.single('file'), async (req,
     const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        const themes=JSON.parse(req.body.themes);
-        const addTheme=addThemeToResource(themes,newDocId);
-        if(addTheme.error===0)
+        const themes = JSON.parse(req.body.themes);
+        const addTheme = addThemeToResource(themes, newDocId);
+        if (addTheme.error === 0)
             return res.sendStatus(201);
         else
             return res.sendStatus(addTheme.error);
@@ -202,7 +202,7 @@ router.post('/doc/',userCheck, checkAdmin ,uploadDoc.single('file'), async (req,
     }
 });
 
-router.post('/video/',userCheck, checkAdmin , uploadDoc.single('file'), async (req, res) => {
+router.post('/video/', userCheck, checkAdmin, uploadDoc.single('file'), async (req, res) => {
     //Needed for model 
     const path = req.body.video;
     const visibility = req.body.visibility;
@@ -213,9 +213,9 @@ router.post('/video/',userCheck, checkAdmin , uploadDoc.single('file'), async (r
     const error = addedDb.error;
     if (error === 0) {
         const newDocId = addedDb.newId;
-        const themes=req.body.themes;
-        const addTheme=addThemeToResource(themes,newDocId);
-        if(addTheme.error===0)
+        const themes = req.body.themes;
+        const addTheme = addThemeToResource(themes, newDocId);
+        if (addTheme.error === 0)
             return res.sendStatus(201);
         else
             return res.sendStatus(addTheme.error);
@@ -279,12 +279,14 @@ router.put('/:id', userCheck, checkAdmin, async (req, res) => {
                 try {
                     themes.forEach(async (themeItem) => {
                         let idTheme = themeItem.idTheme;
-                        let result = await theme.add_RessourceTheme(req.params.id, idTheme);
-                        if (result && (typeof (result.errno) !== 'undefined')) {
-                            throw 'break';
-                        }
-                        if (result) {
-                            returnArray.push(`adding theme ${idTheme} to resource ${req.params.id}`);
+                        if (themeItem.checked) {
+                            let result = await theme.add_RessourceTheme(req.params.id, idTheme);
+                            if (result && (typeof (result.errno) !== 'undefined')) {
+                                throw 'break';
+                            }
+                            if (result) {
+                                returnArray.push(`adding theme ${idTheme} to resource ${req.params.id}`);
+                            }
                         }
                     })
                 }
