@@ -152,18 +152,25 @@ router.put('/admin/:id', userCheck, checkSuperAdmin, async (req, res) => {
 });
 
 router.put('/:id', userCheck, async (req, res) => {
-    const {job_search, in_post}=req.body;
-    let payload = {...req.body};
-    const errors = Users.validateUpdate(payload);
+    const isEmpty = Object.keys(req.body).length === 0;
+    if(isEmpty){
+        return res.sendStatus(400);
+    }
+    const errors = Users.validateUpdate(req.body);
     if (errors) {
         const errorDetails = errors.details;
-        console.log(errors);
         const errorArray = [];
         errorDetails.forEach((error) => {
             errorArray.push(error.message);
         });
 
         return res.status(422).json(errorArray);
+    }
+    let payload={...req.body};
+    const {password}=req.body;
+    if(password){
+        const hashedPassword=await Users.hashPassword(password);
+        payload={...payload,password:hashedPassword};
     }
     const result = await Users.putDetailById(payload, req.params.id);
     if (result && (typeof (result.errno) !== 'undefined')) {
