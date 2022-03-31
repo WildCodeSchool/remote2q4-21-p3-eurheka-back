@@ -42,7 +42,28 @@ async function sendNotification (firstname, lastname, email){
 
 }
 
+async function sendNewPass ( email,token){
+    let transporter = nodemailer.createTransport({
+        host: process.env.MAIL_SERVER,
+        port: process.env.MAIL_PORT,
+        secure: false,
+        auth: {
+            user: process.env.MAIL_SENDER,
+            pass: process.env.MAIL_SENDER_PASSWORD
+        },
+    });
+    let info = await transporter.sendMail({
+        from: process.env.MAIL_SENDER,
+        to: email,
+        subject: "Réinitialisation du mot de passe",
+        html: `<p>Bonjour, Vous avez demandé de réinitialiser votre mot de passe sur le site Eurhéka</p></p>Veuillez vous rendre sur la page de connexion du site, rubrique mot de passe perdu et saisir le code suivant : ${token}</p><p>Si vous n'êtes pas à l'origine de ce message, aucune action n'est nécessaire.</p><p>Cordialement, l'équipe Eurhéka</p>`
+    });
+    return info.accepted[0];
+
+}
+
 module.exports = {
     sendMail,
-    sendNotification
+    sendNotification,
+    sendNewPass
 } 

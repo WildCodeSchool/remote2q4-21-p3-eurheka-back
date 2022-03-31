@@ -54,6 +54,14 @@ const validateLogin = (data) => {
     }).validate(data, { abortEarly: false }).error;
 }
 
+const validateLostPass= (data) => {
+    return Joi.object({
+        email: Joi.string().email().max(255).presence('required'),
+        password: Joi.string().min(8).max(50).presence('required'),
+        token:Joi.string().min(8).max(255).presence('required'),
+    }).validate(data, { abortEarly: false }).error;
+}
+
 const hashPassword = (plainPassword) => {
     return argon2.hash(plainPassword, hashingOptions);
 };
@@ -164,6 +172,41 @@ const updateLevelUser=(id,level)=>{
             return err;
         })
 }
+
+const createTokenForPass=(id,token)=>{
+    return db
+        .query("UPDATE users SET token_lost=? WHERE id_users=?",[token,id])
+        .then(([result])=>{
+            return result.affectedRows!==0
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
+const findOneByMailForPass = (email) => {
+    return db
+        .query("SELECT id_users, token_lost FROM users WHERE email=?", [email])
+        .then(([result]) => result[0])
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
+const updateLostPassword =(id,newPassword)=>{
+    return db
+        .query("UPDATE users SET password= ? , token_lost='' WHERE id_users= ?", [newPassword,id])
+        .then(([result]) => {
+            return result.affectedRows!==0;
+        })
+        .catch((err)=>{
+            console.log(err);
+            return err;
+        })
+}
+
 module.exports = {
     validate,
     validateUpdate,
@@ -180,4 +223,8 @@ module.exports = {
     findOneById,
     validateLevel,
     putDetailById,
+    createTokenForPass,
+    validateLostPass,
+    findOneByMailForPass,
+    updateLostPassword
 }
