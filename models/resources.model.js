@@ -45,7 +45,6 @@ const findOneAdmin = (id) => {
 
 
 const findAllByCategory = (level, category) => {
-    console.log(category);
     const sqlArray = [];
     let sql="";
     if (level >= userRole.ADMIN) {
@@ -61,7 +60,6 @@ const findAllByCategory = (level, category) => {
             sqlArray.push(level);
         }
     }
-    console.log(sql);
     return db
         .query(sql, sqlArray)
         .then(([result]) => result)
