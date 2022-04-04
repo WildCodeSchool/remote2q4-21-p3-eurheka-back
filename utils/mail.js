@@ -85,7 +85,7 @@ async function sendMailForRDV(dateRDV,object,user){
     return info.accepted[0];
 }
 
-async function sendMailForConfirmRDV(dateRDV,user){
+async function sendMailForConfirmRDV(dateRDV,email,state){
     let transporter = nodemailer.createTransport({
         host: process.env.MAIL_SERVER,
         port: process.env.MAIL_PORT,
@@ -95,11 +95,14 @@ async function sendMailForConfirmRDV(dateRDV,user){
             pass: process.env.MAIL_SENDER_PASSWORD
         },
     });
+    let stateRDV='annulé';
+    if(state===1)
+        stateRDV='confirmé';
     let info = await transporter.sendMail({
         from: process.env.MAIL_SENDER,
         to: email,
-        subject: "Réinitialisation du mot de passe",
-        html: `<p>Bonjour, Vous avez demandé de réinitialiser votre mot de passe sur le site Eurhéka</p></p>Veuillez vous rendre sur la page de connexion du site, rubrique mot de passe perdu et saisir le code suivant : ${token}</p><p>Si vous n'êtes pas à l'origine de ce message, aucune action n'est nécessaire.</p><p>Cordialement, l'équipe Eurhéka</p>`
+        subject: "Votre demande de rendez vous",
+        html: `<p>Bonjour,</p><p>Votre rendez-vous ${dateRDV} a bien été ${stateRDV} par votre correspondant</p><p>Cordialement, l'équipe Eurhéka</p>`
     });
     return info.accepted[0];
 }

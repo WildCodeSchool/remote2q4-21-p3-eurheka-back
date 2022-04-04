@@ -208,6 +208,18 @@ const getMyRDV=()=>{
         })
 }   
 
+const getInfoRDVOwner=(id)=>{
+    return db
+        .query("SELECT v.eventid,v.id_users, v.name,date_format(v.event,'%d/%m/%Y')as date_event, date_format(v.event,'%H:%i')as hour_event,v.is_valid,u.firstname,u.lastname,u.email FROM view_event_user v INNER JOIN users u ON u.id_users=v.id_users WHERE eventid=?;",[id])
+        .then(([result])=>{
+            return result[0];
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        })
+}   
+
 module.exports = {
     validate,
     findAllByCategory,
@@ -227,5 +239,6 @@ module.exports = {
     validateRDV,
     updateRDV,
     findLastWhithoutRDV,
-    getMyRDV
+    getMyRDV,
+    getInfoRDVOwner,
 }

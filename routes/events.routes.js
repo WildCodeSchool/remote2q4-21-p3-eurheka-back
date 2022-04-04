@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
 const { userCheck, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
-const {sendMailForRDV} = require('../utils/mail');
+const {sendMailForRDV,sendMailForConfirmRDV} = require('../utils/mail');
 //CRUD Event
 router.get('/nextEvent/',async(req,res)=>{
   const result=await event.findLastWhithoutRDV();
@@ -227,6 +227,21 @@ router.put('/rdv/:id', userCheck, async (req, res) => {
     return res.sendStatus(500);
   }
   if (result) {
+    //Récupérer le nom et le mail de la personne qui a dmeander le RDV
+    const eventUserOwner=await event.getInfoRDVOwner(req.params.id);
+    if (eventUserOwner && (typeof (eventUserOwner.errno) !== 'undefined')) {
+      return res.sendStatus(500);
+    }
+    const mailOwner=eventUserOwner.email;
+    const dateRDV=`du  ${eventUserOwner.date_event} à ${eventUserOwner.hour_event}`;
+    const state=eventUserOwner.is_valid;
+    sendMailForConfirmRDV(dateRDV,mailOwner,state)
+              .then((result) => {
+                 console.log('mail sent')
+              })
+    console.log(eventUserOwner);
+    //Envoyer un mail à cette personne
+
     return res.status(200).json({ id: req.params.id, userId, ...req.body });
   }
   else
