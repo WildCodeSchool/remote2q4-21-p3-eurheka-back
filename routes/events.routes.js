@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
 const { userCheck, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
-
+const {sendMailForRDV} = require('../utils/mail');
 //CRUD Event
 router.get('/nextEvent/',async(req,res)=>{
   const result=await event.findLastWhithoutRDV();
@@ -102,10 +102,12 @@ router.post('/', userCheck, (req, res) => {
   //Must be auth validation//
   //Get User id
   userId = req.userData.user_id;
+  console.log(req.userData);
   const error = event.validate(req.body);
   if (error) {
     res.status(422).json({ validationErrors: error.details });
   } else {
+    
     event.create(req.body)
       .then((createdEvent) => {
         if (event && (typeof (event.errno) !== 'undefined')) {
@@ -114,8 +116,19 @@ router.post('/', userCheck, (req, res) => {
         //here we associate the event with user
         const idEvent = createdEvent.lastId;
         event.associateWithUser(idEvent, userId)
-          .then(
-            res.status(201).json(createdEvent)
+          .then((response)=>{
+            if(parseInt(req.body.category)===1)
+            {
+              const userName=`${req.userData.firstname} ${req.userData.lastname}`;
+              const object=req.body.name;
+              const dateRDV=req.body.date;
+              sendMailForRDV(dateRDV,object,userName)
+              .then((result) => {
+                 console.log('mail sent')
+              })
+            }
+            res.status(201).json(createdEvent);
+          }
           )
           .catch((err) => {
             console.log(err);
