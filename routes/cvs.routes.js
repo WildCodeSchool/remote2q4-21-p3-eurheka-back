@@ -35,6 +35,14 @@ const addCvToDb = async (path) => {
         return { error: 500 };
     }
 }
+router.get('/admin/',userCheck,checkSuperAdmin,async(req,res)=>{
+    const result=await cv.findAllAdmin();
+    if (result && (typeof (result.errno) !== 'undefined')) {
+        return res.sendStatus(500);
+    }
+    return res.status(200).json(result);
+
+});
 
  router.get('/:id', userCheck, checkAdmin, (req, res) => {
      cv.findOne(req.params.id)
@@ -73,6 +81,7 @@ router.get('/', userCheck, (req, res) => {
             res.status(500).send('Internal Error');
         })
 });
+
 
 router.get('/all', userCheck, checkAdmin, (req, res) => {
     cv.findAll()
@@ -145,12 +154,5 @@ router.delete('/:id', userCheck, async (req, res) => {
     }
 });
 
-router.get('/admin',userCheck,checkSuperAdmin,async(req,res)=>{
-    const result=await cv.findAllAdmin();
-    if (result && (typeof (result.errno) !== 'undefined')) {
-        return res.sendStatus(500);
-    }
-    return res.status(200).json(result);
 
-})
 module.exports = router;
