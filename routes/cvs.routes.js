@@ -11,7 +11,7 @@ const storageCv = multer.diskStorage(
         filename: function (req, file, cb) {
             const now = new Date(Date.now());
             const jour = now.getDate()
-            const month = now.getMonth()
+            const month = now.getMonth() + 1
             const year = now.getFullYear()
             const filename = jour+"-"+month+"-"+year+"_"+file.originalname
             cb(null, filename)

@@ -6,7 +6,8 @@ const router = require('./routes/index.routes');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 8000;
 const corsOptions ={
-  origin:process.env.CLIENT_URL, 
+  // origin:process.env.CLIENT_URL,  
+  origin: true,
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }

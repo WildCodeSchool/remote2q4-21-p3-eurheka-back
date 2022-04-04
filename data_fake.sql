@@ -46,3 +46,73 @@ INSERT INTO `opinion` (`id_opinion`, `id_user`, `opinion`, `id_enterprise`, `is_
 (8, 7, 'A refaire', 2, 0);
 
 ALTER TABLE `event_to_user`  ADD `is_valid` BOOLEAN NOT NULL DEFAULT FALSE  AFTER `is_owner`;
+
+
+INSERT INTO `resource` (`id_resource`, `id_cat`, `name`, `path`, `visibility`) VALUES
+(1, 2, '5 astuces pour ne pas angoisser avant un entretien part 1', 'aaa', 1 ),
+(2, 2, 'La prime Macron part 1', 'bbb', 1 ),
+(3, 2, 'Que recherche une entreprise part 1', 'ccc', 1 ),
+(4, 2, 'Comment bien préparer un entretien part 1', 'ddd', 1 ),
+(5, 2, 'Les questions à poser lors d un entretien part 1', 'eee', 1 ),
+(6, 2, 'Comment se renseigner sur une entreprise part 1', 'fff', 1 ),
+(7, 2, 'Comment aborder la question du salaire part 1', 'ggg', 1 ),
+(8, 2, 'Quels défauts dire en entretien part 1', 'hhh', 1 ),
+(9, 2, 'Comment faire face aux questions destabilisantes part 1', 'iii', 1 ),
+(10, 2, 'Comment mettre en avant ses compétences part 1', 'jjj', 1 ),
+(11, 2, '5 astuces pour ne pas angoisser avant un entretien part 2', 'aaa', 2 ),
+(12, 2, 'La prime Macron part 2', 'bbb', 2 ),
+(13, 2, 'Que recherche une entreprise part 2', 'ccc', 2 ),
+(14, 2, 'Comment bien préparer un entretien part 2', 'ddd', 2 ),
+(15, 2, 'Les questions à poser lors d un entretien part 2', 'eee', 2 ),
+(16, 2, 'Comment se renseigner sur une entreprise part 2', 'fff', 2 ),
+(17, 2, 'Comment aborder la question du salaire part 2', 'ggg', 2 ),
+(18, 2, 'Quels défauts dire en entretien part 2', 'hhh', 2 ),
+(19, 2, 'Comment faire face aux questions destabilisantes part 2', 'iii', 2 ),
+(20, 2, 'Comment mettre en avant ses compétences part 2', 'jjj', 2 ),
+(21, 3, 'Plombier', 'aaabbb', 1 ),
+(22, 3, 'Développeur web', 'bbbccc', 1 ),
+(23, 3, 'Carreleur', 'cccddd', 1 ),
+(24, 3, 'Stripteaseur', 'dddeee', 1 ),
+(25, 3, 'Conducteur de bus', 'eeefff', 1 ),
+(26, 3, 'Comptable', 'fffggg', 1 ),
+(27, 3, 'Technicien de laboratoire', 'ggghhh', 1 ),
+(28, 3, 'Agent de sécurité', 'hhhiii', 1 ),
+(29, 3, 'Commercial', 'iiijjj', 1 ),
+(30, 3, 'agent d entretien', 'jjjkkk', 1 ),
+(31, 3, 'Conducteur de travaux', 'aaaccc', 2 ),
+(32, 3, 'Barman', 'bbbddd', 2 ),
+(33, 3, 'Serveur', 'ccceee', 2 ),
+(34, 3, 'Boucher', 'dddfff', 2 ),
+(35, 3, 'Boulanger', 'eeeggg', 2 ),
+(36, 3, 'Banquier', 'fffhhh', 2 ),
+(37, 3, 'Prêtre', 'gggiii', 2 ),
+(38, 3, 'Mécanicien', 'hhhjjj', 2 ),
+(39, 3, 'Assistante maternelle', 'iiikkk', 2 ),
+(40, 3, 'Dogsitter', 'jjjlll', 2 ),
+(41, 1, 'Vidéo 1 part 1', '244YJXYE7Mg', 1 ),
+(42, 1, 'Vidéo 2 part 1', 'KKOHoN9ikGw', 1 ),
+(43, 1, 'Vidéo 3 part 1', '9RdbUDTXjFs', 1 ),
+(44, 1, 'Vidéo 4 part 1', 'L6rB3C1SaLk', 1 ),
+(45, 1, 'Vidéo 5 part 1', '0Aa8WMkt9T8', 1 ),
+(46, 1, 'Vidéo 6 part 1','p7azMCA_9Lg', 1 ),
+(47, 1, 'Vidéo 7 part 1', '5DG6M2Q9uIQ', 1 ),
+(48, 1, 'Vidéo 8 part 1', 'ePFrJ4QGbg8', 1 ),
+(49, 1, 'Vidéo 9 part 1', 'D9CpDzcxb5M', 1 ),
+(50, 1, 'Vidéo 10 part 1', 'AmL-cYGJDbY', 1 ),
+(51, 1, 'Vidéo 1 part 2', 'MbsDJTQ_a5Q', 2 ),
+(52, 1, 'Vidéo 2 part 2', 'TWvrFfU-iV8', 2 ),
+(53, 1, 'Vidéo 3 part 2', 'QrLYAvUG7DM', 2 ),
+(54, 1, 'Vidéo 4 part 2', 'e8C5JqPSg6A', 2 ),
+(55, 1, 'Vidéo 5 part 2', '2N3nF93ySaY', 2 ),
+(56, 1, 'Vidéo 6 part 2', 'FV2ug950tnI', 2 ),
+(57, 1, 'Vidéo 7 part 2', 'VigGlZpbbW0', 2 ),
+(58, 1, 'Vidéo 8 part 2', 'vT-lZVKihKI', 2 ),
+(59, 1, 'Vidéo 9 part 2', '_CO8oiFrQ_U', 2 ),
+(60, 1, 'Vidéo 10 part 2', 'RNMe5gJv2CM', 2 );
+
+
+
+
+
+
+
