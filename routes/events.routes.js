@@ -102,7 +102,6 @@ router.post('/', userCheck, (req, res) => {
   //Must be auth validation//
   //Get User id
   userId = req.userData.user_id;
-  console.log(req.userData);
   const error = event.validate(req.body);
   if (error) {
     res.status(422).json({ validationErrors: error.details });
@@ -239,9 +238,6 @@ router.put('/rdv/:id', userCheck, async (req, res) => {
               .then((result) => {
                  console.log('mail sent')
               })
-    console.log(eventUserOwner);
-    //Envoyer un mail à cette personne
-
     return res.status(200).json({ id: req.params.id, userId, ...req.body });
   }
   else
