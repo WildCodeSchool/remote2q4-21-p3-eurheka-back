@@ -60,6 +60,7 @@ const findAllByCategory = (level, category) => {
             sqlArray.push(level);
         }
     }
+    sql+=" ORDER BY id_resource DESC";
     return db
         .query(sql, sqlArray)
         .then(([result]) => result)
