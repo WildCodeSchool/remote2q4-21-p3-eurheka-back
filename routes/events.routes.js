@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const event = require('../models/events.model');
 const { userCheck, checkAdmin, checkSuperAdmin } = require('../middleware/UserValidation');
-
+const {sendMailForRDV,sendMailForConfirmRDV} = require('../utils/mail');
 //CRUD Event
 router.get('/nextEvent/',async(req,res)=>{
   const result=await event.findLastWhithoutRDV();
@@ -106,6 +106,7 @@ router.post('/', userCheck, (req, res) => {
   if (error) {
     res.status(422).json({ validationErrors: error.details });
   } else {
+    
     event.create(req.body)
       .then((createdEvent) => {
         if (event && (typeof (event.errno) !== 'undefined')) {
@@ -114,8 +115,19 @@ router.post('/', userCheck, (req, res) => {
         //here we associate the event with user
         const idEvent = createdEvent.lastId;
         event.associateWithUser(idEvent, userId)
-          .then(
-            res.status(201).json(createdEvent)
+          .then((response)=>{
+            if(parseInt(req.body.category)===1)
+            {
+              const userName=`${req.userData.firstname} ${req.userData.lastname}`;
+              const object=req.body.name;
+              const dateRDV=req.body.date;
+              sendMailForRDV(dateRDV,object,userName)
+              .then((result) => {
+                 console.log('mail sent')
+              })
+            }
+            res.status(201).json(createdEvent);
+          }
           )
           .catch((err) => {
             console.log(err);
@@ -214,6 +226,18 @@ router.put('/rdv/:id', userCheck, async (req, res) => {
     return res.sendStatus(500);
   }
   if (result) {
+    //Récupérer le nom et le mail de la personne qui a dmeander le RDV
+    const eventUserOwner=await event.getInfoRDVOwner(req.params.id);
+    if (eventUserOwner && (typeof (eventUserOwner.errno) !== 'undefined')) {
+      return res.sendStatus(500);
+    }
+    const mailOwner=eventUserOwner.email;
+    const dateRDV=`du  ${eventUserOwner.date_event} à ${eventUserOwner.hour_event}`;
+    const state=eventUserOwner.is_valid;
+    sendMailForConfirmRDV(dateRDV,mailOwner,state)
+              .then((result) => {
+                 console.log('mail sent')
+              })
     return res.status(200).json({ id: req.params.id, userId, ...req.body });
   }
   else
