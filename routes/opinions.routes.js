@@ -2,10 +2,8 @@ const router = require("express").Router();
 const Opinion = require('../models/opinions.model');
 const Entreprise = require('../models/enterprises.model');
 const { userCheck, checkAdmin } = require('../middleware/UserValidation');
-const { response } = require("express");
 
 router.get('/', userCheck, checkAdmin, (req, res) => {
-    //This route must be protected and only for administrator
     Opinion.findAll()
         .then((result) => {
             if(result &&(typeof(result.errno)!=='undefined')){
@@ -25,14 +23,13 @@ router.get('/eurheka/', (req, res) => {
                 return res.sendStatus(500);
             }
             if (id === undefined) {
-                console.log('erreur');
-                res.status(404).send('Company not found');
+                return res.status(404).send('Company not found');
             }
             else {
                 let id_ent = id.id_enterprise;
                 Opinion.findAllByEnterprise(`${id_ent}`)
                     .then((opinions) => {
-                        res.json(opinions);
+                        return res.json(opinions);
                     })
             }
         })
@@ -49,12 +46,10 @@ router.get('/enterprise/:id', userCheck, checkAdmin, (req, res) => {
                 return res.sendStatus(500);
             }
             if (id === undefined) {
-                console.log('erreur');
-                res.status(404).send('Company not found');
+                return res.status(404).send('Company not found');
             }
             else {
                 let id_ent = id.id_enterprise;
-                console.log(`ID : ${id_ent}`);
                 Opinion.findAllByEnterprise(`${id_ent}`)
                     .then((opinions) => {
                         res.json(opinions);
@@ -78,7 +73,6 @@ router.get('/:id', userCheck, checkAdmin, (req, res) => {
             }
         })
         .catch((err) => {
-            console.error(err);
             res.status(500).send('Internal Error');
         })
 });
@@ -97,7 +91,6 @@ router.post('/', userCheck, async (req, res) => {
         }
         enterprise_id = enterprise_value.id_enterprise;
         if (enterprise_id === undefined) {
-            console.log('erreur');
             return res.status(404).send('Company not found');
         }
     }
@@ -118,15 +111,12 @@ router.post('/', userCheck, async (req, res) => {
                 return res.status(201).json(opinionCreated);
             })
             .catch((err) => {
-                console.error(err);
-                res.status(500).send('Error saving the movie');
+                res.status(500).send('Error saving company');
             });
     }
 });
 
 router.put('/:id', userCheck, checkAdmin, async (req, res) => {
-    //this route must be protected, only for super admin
-    //Check if Opinion is in DB
     const opinionExists = await Opinion.findOne(req.params.id);
     if(opinionExists&&(typeof(opinionExists.errno)!=='undefined')){
         return res.sendStatus(500);
@@ -171,7 +161,5 @@ router.delete('/:id', userCheck, checkAdmin, async (req, res) => {
         res.status(500).send('Error deleting an opinion');
     }
 });
-
-
 
 module.exports = router;

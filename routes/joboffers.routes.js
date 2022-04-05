@@ -75,10 +75,6 @@ router.get('/count/',async (req,res)=>{
     return res.status(200).json(result);
 });
 
-router.get('/:id', async (req, res) => {
-    return res.sendStatus(402);
-});
-
 //Only superAdmin can post. To be chnage for user enterprise class
 router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (req, res) => {
     //Voir pour fixer l'erreur de multer si le file est pas bon
@@ -121,10 +117,6 @@ router.post('/', userCheck, checkSuperAdmin, uploadOffer.single('file'), async (
     }
 });
 
-router.put('/:id', userCheck, checkSuperAdmin, async (req, res) => {
-    return res.sendStatus(404);
-});
-
 router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     //Delete from users
     const deletedUserJob = await jobOffer.deleteJobUser(req.params.id);
@@ -154,7 +146,5 @@ router.delete('/:id', userCheck, checkSuperAdmin, async (req, res) => {
     else
         return res.status(404).send('No job found');
 });
-
-
 
 module.exports = router;
