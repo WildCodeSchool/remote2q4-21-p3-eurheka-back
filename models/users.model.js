@@ -12,7 +12,18 @@ const hashingOptions = {
 };
 
 const checkPassword = (plainPassword, hashedPassword) => {
-    return argon2.verify(hashedPassword, plainPassword, hashingOptions);
+    if(plainPassword==='' ||hashedPassword==='')
+        return false;
+    if(!hashedPassword.includes('$'))
+        return false;
+    try{
+     const valid= argon2.verify(hashedPassword, plainPassword, hashingOptions);
+     return valid;
+    }
+    catch(err){
+        console.log(err);
+      ///  return false;
+    }
 }
 
 const validate = (data, forCreation = true) => {
