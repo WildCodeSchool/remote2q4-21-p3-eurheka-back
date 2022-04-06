@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const nodemailer = require('nodemailer');
 require('dotenv').config({ path: '../.env' });
 const Joi = require('joi');
 const { sendMail } = require("../utils/mail");
@@ -18,9 +17,7 @@ const validate = (data) => {
 router.post('/', async (req, res) => {
     const errors = validate(req.body);
     if (errors) {
-        console.log(errors.details);
         return res.sendStatus(422);
-
     }
     try {
         const { email, lastname, firstname, subject, message } = req.body;

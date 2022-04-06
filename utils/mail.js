@@ -31,7 +31,6 @@ async function sendNotification (firstname, lastname, email){
             pass: process.env.MAIL_SENDER_PASSWORD
         },
     });
-    let messageMod = `Mail du site eurheka!`;
     let info = await transporter.sendMail({
         from: process.env.MAIL_SENDER,
         to: process.env.MAIL_DEST,

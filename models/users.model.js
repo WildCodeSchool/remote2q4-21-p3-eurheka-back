@@ -11,6 +11,21 @@ const hashingOptions = {
     parallelism: 1,
 };
 
+const checkPassword = (plainPassword, hashedPassword) => {
+    if(plainPassword==='' ||hashedPassword==='')
+        return false;
+    if(!hashedPassword.includes('$'))
+        return false;
+    try{
+     const valid= argon2.verify(hashedPassword, plainPassword, hashingOptions);
+     return valid;
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+}
+
 const validate = (data, forCreation = true) => {
     const presence = forCreation ? 'required' : 'optional';
     return Joi.object({
@@ -132,9 +147,6 @@ const create = async ({ firstname, lastname, password, email, options }) => {
             return err;
         });
 
-}
-const checkPassword = (plainPassword, hashedPassword) => {
-    return argon2.verify(hashedPassword, plainPassword, hashingOptions);
 }
 
 const findAll=()=>{

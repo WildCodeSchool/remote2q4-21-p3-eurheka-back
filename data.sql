@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   CONSTRAINT `fk_user_enterprise`
     FOREIGN KEY (`id_enterprise`)
     REFERENCES `enterprise` (`id_enterprise`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 

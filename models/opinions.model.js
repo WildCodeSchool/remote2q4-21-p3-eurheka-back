@@ -17,6 +17,7 @@ const checkValidate = (data) => {
         is_valid: Joi.boolean().required()
     }).validate(data, { abortEarly: false }).error;
 }
+
 const findOne = (id) => {
     return db
         .query("SELECT id_opinion, is_valid, opinion, CONCAT(firstname,' ',lastname) as author FROM view_opinion WHERE id_opinion=?", [id])
@@ -61,7 +62,6 @@ const create = ({ user, enterprise, opinion }) => {
 }
 
 const update = (id, isValid) => {
-    console.log(`ID : ${id} isvalid: ${isValid}`);
     return db
         .query("UPDATE opinion SET is_valid=? WHERE id_opinion=?", [isValid, id])
         .then(([result]) => {

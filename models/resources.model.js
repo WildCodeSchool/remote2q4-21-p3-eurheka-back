@@ -43,7 +43,6 @@ const findOneAdmin = (id) => {
         });
 }
 
-
 const findAllByCategory = (level, category) => {
     const sqlArray = [];
     let sql="";

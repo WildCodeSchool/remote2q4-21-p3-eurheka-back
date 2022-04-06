@@ -146,11 +146,6 @@ router.get('/admin/:id', userCheck, checkAdmin, async (req, res) => {
         return res.status(200).json([]);
 });
 
-router.get('/:id', (req, res) => {
-    return res.status(404).send('A completer');
-
-});
-
 router.post('/job/', userCheck, checkAdmin, uploadJob.single('file'), async (req, res) => {
     //Needed for model 
     const path = req.file.path;
@@ -227,6 +222,7 @@ router.post('/video/', userCheck, checkAdmin, uploadDoc.single('file'), async (r
         return res.sendStatus(error);
     }
 });
+
 router.put('/:id', userCheck, checkAdmin, async (req, res) => {
     const returnArray = [];
     //check if resource exists

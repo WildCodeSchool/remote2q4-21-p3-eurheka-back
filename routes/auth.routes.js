@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const auth = require('../models/auth.model');
 const { checkLevel } = require('../middleware/UserValidation');
 const {userRole}=require('../utils/definitions');
 

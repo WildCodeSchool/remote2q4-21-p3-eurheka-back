@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Users = require('../models/users.model');
-const Auth = require('../models/auth.model');
 const  {sendNotification,sendNewPass}=require('../utils/mail');
 const { userInscriptionOptions, maxAge, userRole } = require('../utils/definitions');
 const { calculateToken } = require('../utils/auth');
@@ -28,7 +27,6 @@ router.post('/', async (req, res) => {
         return res.status(422).json(errorArray);
     }
     else {
-        //check if user already exists
         const existUser = await Users.findOneByMail(email);
         if (existUser && (typeof (existUser.errno) !== 'undefined')) {
             return res.sendStatus(500);
@@ -56,7 +54,6 @@ router.post('/lost/',async(req,res)=>{
     if (errors) {
         return res.status(422).json({ validationErrors: errors.details });
     }
-    //check if user already exists
     const existUser=await Users.findOneByMail(req.body.email);
     if(existUser&&(typeof(existUser.errno)!=='undefined')){
         return res.sendStatus(500);
@@ -65,9 +62,7 @@ router.post('/lost/',async(req,res)=>{
         return res.sendStatus(404);
     }
     const idUser=existUser.id_users;
-    //Generate token
     const value=idUser+Date.now();
-    console.log(`value : ${value}`);
     const result=await Users.createTokenForPass(idUser,value);
     if (result && (typeof (result.errno) !== 'undefined')) {
         return res.sendStatus(500);
@@ -92,7 +87,6 @@ router.post('/newPass/',async (req,res)=>{
     if (errors) {
         return res.status(422).json({ validationErrors: errors.details });
     }
-    //Change password if user exist and token is OK
     const existUser=await Users.findOneByMailForPass(req.body.email);
     if(existUser&&(typeof(existUser.errno)!=='undefined')){
         return res.sendStatus(500);
@@ -102,12 +96,9 @@ router.post('/newPass/',async (req,res)=>{
     }
     const idUser=existUser.id_users;
     const userToken=existUser.token_lost;
-    console.log(userToken);
-    console.log(req.body.token);
     if (req.body.token!==userToken){
         return res.sendStatus(403);
     }
-    //Encrypt new password, empty token
     const hashedPassword=await Users.hashPassword(req.body.password);
     const passChanged=await Users.updateLostPassword(idUser,hashedPassword);
     if(passChanged&&(typeof(passChanged.errno)!=='undefined')){
@@ -120,12 +111,10 @@ router.post('/newPass/',async (req,res)=>{
 });
 
 router.post('/login/', async (req, res) => {
-    //Check if email et pass are corrects
     const errors = Users.validateLogin(req.body);
     if (errors) {
         return res.status(422).json({ validationErrors: errors.details });
     }
-    //Check if user exists
     const userExist = await Users.findOneByMailForLogin(req.body.email);
     if (userExist && (typeof (userExist.errno) !== 'undefined')) {
         return res.sendStatus(500);
@@ -133,7 +122,6 @@ router.post('/login/', async (req, res) => {
     if (!userExist) {
         return res.status(404).send('User not found');
     }
-    //CheckPassword
     const userOK = await Users.checkPassword(req.body.password, userExist.password);
     if (userOK && (typeof (userOK.errno) !== 'undefined')) {
         return res.sendStatus(500);
@@ -141,7 +129,6 @@ router.post('/login/', async (req, res) => {
     if (!userOK) {
         return res.status(401).send('Wrong login or password')
     }
-    //create token
     try {
         const token = calculateToken(userExist.id_users, userExist.user_level,userExist.firstname,userExist.lastname ,maxAge);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
