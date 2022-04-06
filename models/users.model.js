@@ -22,7 +22,7 @@ const checkPassword = (plainPassword, hashedPassword) => {
     }
     catch(err){
         console.log(err);
-      ///  return false;
+        return false;
     }
 }
 
