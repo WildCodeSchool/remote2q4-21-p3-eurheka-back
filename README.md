@@ -14,7 +14,7 @@ Dependances :
     - nodemailer
     - nodemon
 Clonage du dépot :
-    git clone https://github.com/WildCodeSchool/remote2q4-21-p3-eurheka-back/
+    git clone https://github.com/WildCodeSchool/remote2q4-21-p3-eurheka-back.git
 
 Déploiement :
     Dans le repertoire de destination, créer les répertoires suivants, à la racine du projet :
@@ -23,7 +23,7 @@ Déploiement :
     uploads/docs/
     uploads/offers/
 
-    Configurer le fichier .env
+    Configurer le fichier .env avec les informations nécessaires (connexion à la base de données, serveur messagerie SMTP).
 
     Executer la commande npm install
-    
+
