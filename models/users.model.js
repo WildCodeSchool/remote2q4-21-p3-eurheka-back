@@ -14,16 +14,9 @@ const hashingOptions = {
 const checkPassword = (plainPassword, hashedPassword) => {
     if(plainPassword==='' ||hashedPassword==='')
         return false;
-    if(!hashedPassword.includes('$'))
-        return false;
-    try{
-     const valid= argon2.verify(hashedPassword, plainPassword, hashingOptions);
-     return valid;
-    }
-    catch(err){
-        console.log(err);
-        return false;
-    }
+     return argon2.verify(hashedPassword, plainPassword, hashingOptions)
+            .catch(()=>false);
+     
 }
 
 const validate = (data, forCreation = true) => {
