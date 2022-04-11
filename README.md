@@ -1,6 +1,10 @@
 Eurheka Back End.
 Ce dépot contient la partie back-end du projet Eurheka!
 
+Prérequis :
+Node.js : https://nodejs.org/en/download/
+MySQL : https://dev.mysql.com/downloads/mysql/
+
 Dependances :
     - argon2
     - cookie-parser
@@ -27,3 +31,10 @@ Déploiement :
 
     Executer la commande npm install
 
+La structure de la base de données est contenue dans le fichier data.sql
+
+Lancement
+npm start
+
+Lien vers le dépot front : 
+https://github.com/WildCodeSchool/remote2q4-21-p3-eurheka-front/
