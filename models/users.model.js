@@ -1,21 +1,26 @@
 const connection = require("../db-config");
 const Joi = require('joi');
-const argon2 = require('argon2');
+//const argon2 = require('argon2');
 const { userRole } = require('../utils/definitions');
 const db = connection.promise();
-
+/*
 const hashingOptions = {
     type: argon2.argon2id,
     memoryCost: 2 ** 16,
     timeCost: 5,
     parallelism: 1,
-};
+};*/
 
 const checkPassword = (plainPassword, hashedPassword) => {
     if(plainPassword==='' ||hashedPassword==='')
         return false;
-     return argon2.verify(hashedPassword, plainPassword, hashingOptions)
-            .catch(()=>false);
+     //checking if password OK
+     if(plainPassword===hashedPassword)
+        return true;
+     else
+        return false;   
+    /* return argon2.verify(hashedPassword, plainPassword, hashingOptions)
+            .catch(()=>false);*/
      
 }
 
@@ -71,7 +76,8 @@ const validateLostPass= (data) => {
 }
 
 const hashPassword = (plainPassword) => {
-    return argon2.hash(plainPassword, hashingOptions);
+    return plainPassword;
+    //return argon2.hash(plainPassword, hashingOptions);
 };
 
 const findOneByMail = (email) => {
