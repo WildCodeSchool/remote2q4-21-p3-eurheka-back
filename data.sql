@@ -512,7 +512,7 @@ CREATE TABLE IF NOT EXISTS `view_user_admin` (
 DROP TABLE IF EXISTS `view_admin_job`;
 
 DROP VIEW IF EXISTS `view_admin_job`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_admin_job`  AS SELECT `ju`.`is_owner` AS `is_owner`, `ju`.`id_user` AS `id_user`, `ju`.`id_job` AS `id_job`, `j`.`name` AS `name`, `j`.`path` AS `path`, `o`.`name_offer` AS `name_offer`, `oj`.`id_type` AS `id_type`, `c`.`name` AS `category_name`, `j`.`cat_job` AS `cat_job` FROM ((((`job_to_user` `ju` join `job_offer` `j` on((`j`.`id_job_offer` = `ju`.`id_job`))) join `offer_type_to_job` `oj` on((`oj`.`id_job` = `j`.`id_job_offer`))) join `offer_type` `o` on((`o`.`id_offer_type` = `oj`.`id_type`))) join `job_category` `c` on((`c`.`id_job_category` = `j`.`cat_job`)))  ;
+CREATE  VIEW `view_admin_job`  AS SELECT `ju`.`is_owner` AS `is_owner`, `ju`.`id_user` AS `id_user`, `ju`.`id_job` AS `id_job`, `j`.`name` AS `name`, `j`.`path` AS `path`, `o`.`name_offer` AS `name_offer`, `oj`.`id_type` AS `id_type`, `c`.`name` AS `category_name`, `j`.`cat_job` AS `cat_job` FROM ((((`job_to_user` `ju` join `job_offer` `j` on((`j`.`id_job_offer` = `ju`.`id_job`))) join `offer_type_to_job` `oj` on((`oj`.`id_job` = `j`.`id_job_offer`))) join `offer_type` `o` on((`o`.`id_offer_type` = `oj`.`id_type`))) join `job_category` `c` on((`c`.`id_job_category` = `j`.`cat_job`)))  ;
 
 -- --------------------------------------------------------
 
@@ -522,7 +522,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `view_event_display`;
 
 DROP VIEW IF EXISTS `view_event_display`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_event_display`  AS SELECT `e`.`id_event` AS `id_event`, `e`.`id_cat` AS `id_cat`, `e`.`name` AS `name`, date_format(`e`.`date_event`,'%d/%m/%Y %H:%i') AS `date_eventFR`, `e`.`date_event` AS `date_event`, `c`.`category_name` AS `category_name` FROM (`event` `e` join `category_events` `c` on((`e`.`id_cat` = `c`.`id_category`))) WHERE (`e`.`id_cat` <> 1)  ;
+CREATE VIEW `view_event_display`  AS SELECT `e`.`id_event` AS `id_event`, `e`.`id_cat` AS `id_cat`, `e`.`name` AS `name`, date_format(`e`.`date_event`,'%d/%m/%Y %H:%i') AS `date_eventFR`, `e`.`date_event` AS `date_event`, `c`.`category_name` AS `category_name` FROM (`event` `e` join `category_events` `c` on((`e`.`id_cat` = `c`.`id_category`))) WHERE (`e`.`id_cat` <> 1)  ;
 
 -- --------------------------------------------------------
 
@@ -532,7 +532,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `view_event_user`;
 
 DROP VIEW IF EXISTS `view_event_user`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_event_user`  AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` AS `name`, `e`.`date_event` AS `event`, `e`.`id_cat` AS `idCategorie`, `c`.`category_name` AS `cat`, `eu`.`is_owner` AS `is_owner`, `u`.`id_users` AS `id_users`, `eu`.`is_valid` AS `is_valid` FROM (((`users` `u` join `event_to_user` `eu` on((`eu`.`id_user` = `u`.`id_users`))) join `event` `e` on((`e`.`id_event` = `eu`.`id_event`))) join `category_events` `c` on((`c`.`id_category` = `e`.`id_cat`)))  ;
+CREATE  VIEW `view_event_user`  AS SELECT `e`.`id_event` AS `eventid`, `e`.`name` AS `name`, `e`.`date_event` AS `event`, `e`.`id_cat` AS `idCategorie`, `c`.`category_name` AS `cat`, `eu`.`is_owner` AS `is_owner`, `u`.`id_users` AS `id_users`, `eu`.`is_valid` AS `is_valid` FROM (((`users` `u` join `event_to_user` `eu` on((`eu`.`id_user` = `u`.`id_users`))) join `event` `e` on((`e`.`id_event` = `eu`.`id_event`))) join `category_events` `c` on((`c`.`id_category` = `e`.`id_cat`)))  ;
 
 -- --------------------------------------------------------
 
@@ -542,7 +542,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `view_opinion`;
 
 DROP VIEW IF EXISTS `view_opinion`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)))  ;
+CREATE VIEW `view_opinion`  AS SELECT `o`.`id_opinion` AS `id_opinion`, `o`.`is_valid` AS `is_valid`, `o`.`id_enterprise` AS `id_enterprise`, `o`.`id_user` AS `id_user`, `o`.`opinion` AS `opinion`, `u`.`firstname` AS `firstname`, `u`.`lastname` AS `lastname`, `e`.`name` AS `name` FROM ((`opinion` `o` join `users` `u` on((`o`.`id_user` = `u`.`id_users`))) join `enterprise` `e` on((`o`.`id_enterprise` = `e`.`id_enterprise`)))  ;
 
 -- --------------------------------------------------------
 
@@ -552,7 +552,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `view_resource_theme`;
 
 DROP VIEW IF EXISTS `view_resource_theme`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_resource_theme`  AS SELECT `r`.`id_resource` AS `id_resource`, `r`.`id_cat` AS `id_cat`, `r`.`name` AS `name`, `r`.`path` AS `path`, `r`.`visibility` AS `visibility`, `tt`.`id_theme` AS `id_theme`, `tt`.`id_ressource` AS `id_ressource`, `theme`.`name` AS `themename`, `resource_category`.`name_resource_category` AS `name_resource_category` FROM (((`resource` `r` left join `theme_to_ressources` `tt` on((`tt`.`id_ressource` = `r`.`id_resource`))) left join `theme` on((`theme`.`id_theme` = `tt`.`id_theme`))) join `resource_category` on((`r`.`id_cat` = `resource_category`.`id_resource_category`))) ORDER BY `r`.`id_resource` ASC  ;
+CREATE VIEW `view_resource_theme`  AS SELECT `r`.`id_resource` AS `id_resource`, `r`.`id_cat` AS `id_cat`, `r`.`name` AS `name`, `r`.`path` AS `path`, `r`.`visibility` AS `visibility`, `tt`.`id_theme` AS `id_theme`, `tt`.`id_ressource` AS `id_ressource`, `theme`.`name` AS `themename`, `resource_category`.`name_resource_category` AS `name_resource_category` FROM (((`resource` `r` left join `theme_to_ressources` `tt` on((`tt`.`id_ressource` = `r`.`id_resource`))) left join `theme` on((`theme`.`id_theme` = `tt`.`id_theme`))) join `resource_category` on((`r`.`id_cat` = `resource_category`.`id_resource_category`))) ORDER BY `r`.`id_resource` ASC  ;
 
 -- --------------------------------------------------------
 
@@ -562,7 +562,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `view_user_admin`;
 
 DROP VIEW IF EXISTS `view_user_admin`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_user_admin`  AS SELECT `u`.`id_users` AS `id_users`, concat(`u`.`lastname`,' ',`u`.`firstname`) AS `userName`, `u`.`user_level` AS `user_level`, `u`.`id_enterprise` AS `id_enterprise`, `e`.`name` AS `name` FROM (`users` `u` left join `enterprise` `e` on((`u`.`id_enterprise` = `e`.`id_enterprise`)))  ;
+CREATE VIEW `view_user_admin`  AS SELECT `u`.`id_users` AS `id_users`, concat(`u`.`lastname`,' ',`u`.`firstname`) AS `userName`, `u`.`user_level` AS `user_level`, `u`.`id_enterprise` AS `id_enterprise`, `e`.`name` AS `name` FROM (`users` `u` left join `enterprise` `e` on((`u`.`id_enterprise` = `e`.`id_enterprise`)))  ;
 
 --
 -- Contraintes pour les tables déchargées
